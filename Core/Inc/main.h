@@ -77,6 +77,10 @@ void Error_Handler(void);
 #define SDC_IN_GPIO_Port GPIOB
 #define SDC_LATCH_Pin GPIO_PIN_1
 #define SDC_LATCH_GPIO_Port GPIOB
+#define SDC_EN_Pin GPIO_PIN_11
+#define SDC_EN_GPIO_Port GPIOB
+#define AUX_EN_Pin GPIO_PIN_12
+#define AUX_EN_GPIO_Port GPIOB
 #define CHARGER_FLAG_Pin GPIO_PIN_14
 #define CHARGER_FLAG_GPIO_Port GPIOB
 #define IMD_DATA_Pin GPIO_PIN_8

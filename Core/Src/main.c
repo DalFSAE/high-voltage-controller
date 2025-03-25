@@ -106,6 +106,15 @@ int main(void)
     /* USER CODE END WHILE */
     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);
     HAL_Delay(100);
+
+
+    // eFUSE
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_11, GPIO_PIN_SET);
+
+    HAL_Delay(1000);
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_11, GPIO_PIN_RESET);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
