@@ -47,7 +47,13 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/Core/User/app_main.c
+    ${CMAKE_SOURCE_DIR}/Core/User/app_main.h
+    ${CMAKE_SOURCE_DIR}/Core/User/heartbeat.c
+    ${CMAKE_SOURCE_DIR}/Core/User/io_control.c
+    ${CMAKE_SOURCE_DIR}/Core/User/io_control.h
     # Add user sources here
+    
 )
 
 # Add include paths

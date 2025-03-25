@@ -1,3 +1,5 @@
+/*
+
 #include "io_control.h"
 #include "hvc_config.h"
 
@@ -33,4 +35,4 @@ void disable_all_relays(){
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
 }
-
+*/

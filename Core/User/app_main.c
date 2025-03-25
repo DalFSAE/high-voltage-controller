@@ -1,3 +1,5 @@
+/*
+
 #include "stm32g0xx_hal.h"
 
 #include "app_main.h"
@@ -43,7 +45,7 @@ uint32_t lastMessageTime = 0;       //
 static void FDCAN_Config(void) {
     FDCAN_FilterTypeDef sFilterConfig;
 
-    /* Configure Rx filter */
+    // Configure Rx filter 
     sFilterConfig.IdType = FDCAN_STANDARD_ID;
     sFilterConfig.FilterIndex = 0;
     sFilterConfig.FilterType = FDCAN_FILTER_MASK;
@@ -55,15 +57,15 @@ static void FDCAN_Config(void) {
         Error_Handler();
     }
 
-    /* Configure global filter:
-        Filter all remote frames with STD and EXT ID
-        Reject non matching frames with STD ID and EXT ID */
+    //     Configure global filter:
+    //     Filter all remote frames with STD and EXT ID
+    //     Reject non matching frames with STD ID and EXT ID 
     if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE) != HAL_OK)
     {
         Error_Handler();
     }
 
-    /* Start the FDCAN module */
+    .. Start the FDCAN module 
     if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
     {
         Error_Handler();
@@ -226,7 +228,7 @@ void HVCStatusTaskEntry(void *argument){
     FDCAN_TxHeaderTypeDef TxHeader; // HVC_Status_Message 
     uint8_t TxData[7];
 
-    /* Prepare Tx Header */
+    //  Prepare Tx Header 
     TxHeader.Identifier = 0x01B;
     TxHeader.IdType = FDCAN_STANDARD_ID;
     TxHeader.TxFrameType = FDCAN_DATA_FRAME;
@@ -253,7 +255,7 @@ void HVCStatusTaskEntry(void *argument){
 
         if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK)
         {
-            /* Transmission request Error */
+            //  Transmission request Error
             Error_Handler();
         }
 
@@ -279,9 +281,9 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
     
     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
         {
-        /* retrieve Rx messages from RX FIFO0 */
+        //  retrieve Rx messages from RX FIFO0 
         if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK) {
-            /* Reception Error */
+            // /* Reception Error 
             Error_Handler();
         }
         
@@ -305,3 +307,4 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
         }
     }
 }
+*/
