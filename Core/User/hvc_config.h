@@ -12,9 +12,9 @@
 #define AIR_M_PORT GPIOC
 #define PC_PORT GPIOC
 
-#define AIR_P_PIN 2
-#define AIR_M_PIN 1
-#define PC_PIN 0
+#define AIR_P_PIN GPIO_PIN_2
+#define AIR_M_PIN GPIO_PIN_1
+#define PC_PIN GPIO_PIN_0
 
 
 
