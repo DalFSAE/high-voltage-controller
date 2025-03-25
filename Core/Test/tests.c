@@ -4,17 +4,16 @@
 #include "stm32g0xx_hal.h"
 #include "core_cm0plus.h"
 
-#define DHCSR (*(volatile uint32_t *)0xE000EDF0)
-#define C_DEBUGEN_Msk (1UL << 0)
+void test_failed() {
+    while (true) {
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_11); // Status LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12); // Status LED
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // Status LED  
+        HAL_Delay(250);
+    }
 
-
-
-bool is_debugger_attached(void);
-
-bool is_debugger_attached(void) {
-    return (DHCSR & C_DEBUGEN_Msk);
 }
-
 
 
 bool contactor_test() {
@@ -35,29 +34,41 @@ bool contactor_test() {
     enable_air_positive();
     HAL_Delay(1000);
     disable_air_positive();
-    // enable_precharge_relay();
-    // HAL_Delay(5000);
 
-    // enable_air_positive();
-    // HAL_Delay(100);
-    // disable_precharge_relay();
-    // HAL_Delay(5000);
-    // HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
-
+    test_failed();
 
     return true;
 }
 
 
 void run_tests() {
-    // Start-up Tests 
+    bool debug = false;
+    
+    uint32_t start = HAL_GetTick();
+    uint32_t status_ms = 100;
+    
+    // Start-up Tests (add breakpoint and change debug variable) 
+    if (debug) {
+        contactor_test();
+    }
 
-    // Infinite Loop
+    // Infinite Loop Tests (add breakpoint and change debug variable)
     while (true) {
-        if (!is_debugger_attached()) {
+        if (debug) {
             HAL_Delay(500);
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
         }
+        
+        
+        HAL_Delay(10);
+        
+        // Status LED
+        if (HAL_GetTick() - start > status_ms) {
+            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
+            break;
+        }
+
+
     }
 
 }

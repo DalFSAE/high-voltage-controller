@@ -49,6 +49,7 @@ set(TEST_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/Test)
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${TEST_SRC_DIR}/tests.c
     ${USER_SRC_DIR}/app_main.c
+    ${USER_SRC_DIR}/hv_control.c
     ${USER_SRC_DIR}/heartbeat.c
     ${USER_SRC_DIR}/io_control.c
 )
