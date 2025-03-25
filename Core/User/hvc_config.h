@@ -8,4 +8,14 @@
 #define PRECHARGE_MAX_TIME 10000
 #define PRECHARGE_PERCENT_DIF 5.0f
 
+#define AIR_P_PORT GPIOC
+#define AIR_M_PORT GPIOC
+#define PC_PORT GPIOC
+
+#define AIR_P_PIN 2
+#define AIR_M_PIN 1
+#define PC_PIN 0
+
+
+
 #endif

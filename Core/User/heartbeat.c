@@ -58,4 +58,3 @@ void HeartbeatTaskEntry(void *argument){
         osDelay(HEARTBEAT_TIME);
     }
 }
-*/
