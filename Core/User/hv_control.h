@@ -3,12 +3,6 @@
 
 #include <stdbool.h>
 
-bool sdc_present(void);
-bool simple_precharge(void);
-
-// bool asyn_precharge(void);
-
-
 // HVC State Machine 
 typedef enum {
     HVC_OFF                 = 0x00U,
@@ -19,6 +13,28 @@ typedef enum {
     HVC_SDC_FAULT           = 0x05U,
     HVC_TIMEOUT_FAULT       = 0x06U
 } HVC_State_t;
+
+
+bool sdc_present(void);
+HVC_State_t simple_precharge(void);
+HVC_State_t active_precharge(void);
+
+
+void enable_precharge_relay();
+void enable_air_negative();
+void enable_air_positive();
+
+void disable_precharge_relay();
+void disable_air_negative();
+void disable_air_positive();
+
+void disable_all_relays();
+
+
+// bool asyn_precharge(void);
+
+
+
 
 
 #endif

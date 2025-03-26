@@ -101,6 +101,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
   run_tests();
+  app_init();
+  app_main();
   /* USER CODE END 2 */
 
   /* Infinite loop */

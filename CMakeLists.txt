@@ -51,7 +51,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${USER_SRC_DIR}/app_main.c
     ${USER_SRC_DIR}/hv_control.c
     ${USER_SRC_DIR}/heartbeat.c
-    ${USER_SRC_DIR}/io_control.c
+    ${USER_SRC_DIR}/adc_driver.c
 )
 
 # Add include paths
