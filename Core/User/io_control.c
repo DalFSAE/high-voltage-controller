@@ -29,7 +29,7 @@ void disable_air_positive(){
 }
 
 void disable_all_relays(){
-    HAL_GPIO_WritePin(PC_PIN, PC_PORT, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(PC_PORT, PC_PIN, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(AIR_M_PORT, AIR_M_PIN, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(AIR_P_PORT, AIR_P_PIN, GPIO_PIN_RESET);
 }
