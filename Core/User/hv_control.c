@@ -36,23 +36,22 @@ void disable_all_relays(){
     HAL_GPIO_WritePin(AIR_P_PORT, AIR_P_PIN, GPIO_PIN_RESET);
 }
 
+
+float amc1301_adc_to_voltage(uint16_t adc_val) {
+    return ((float)adc_val - 76.0f) * (30.0f / 247.0f);
+}
+
 float measure_pack_voltage() {
-    float packVoltage = 0.0f;
-    uint16_t adcPackVoltage = adc_buf[ADC_VBATT]; // read ADC
-    // convert to voltage 
-    return packVoltage;
+    return amc1301_adc_to_voltage(adc_buf[ADC_VBATT]);
 }
 
 float measure_ts_voltage() {
-    float tsVoltage = 0.0f;
-    uint16_t adcPackVoltage = adc_buf[ADC_VTS]; // read ADC
-    return tsVoltage;
+    return amc1301_adc_to_voltage(adc_buf[ADC_VTS]);
 }
 
 
 
 bool sdc_present() {
-
     if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
         return false; // ADC Timeout
     }
@@ -61,10 +60,10 @@ bool sdc_present() {
 
 
 HVC_State_t active_precharge() {
-    HVC_State_t result = HVC_STANDBY;    
+    HVC_State_t hvcState = HVC_STANDBY;    
 
     if (!sdc_present()) {
-        result = HVC_PRECHARGE_FAULT;
+        hvcState = HVC_PRECHARGE_FAULT;
         goto cleanup;
     }
 
@@ -73,52 +72,53 @@ HVC_State_t active_precharge() {
 
     // Halt function and wait for ADC to update
     if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
-        result = HVC_TIMEOUT_FAULT;
+        hvcState = HVC_TIMEOUT_FAULT;
         goto cleanup;
     }
 
-    uint16_t batteryStartingVoltage = adc_buf[ADC_VBATT];
-    uint16_t tractiveStartingVoltage = adc_buf[ADC_VTS]; // Should be close to 0
+    float packVoltage = measure_pack_voltage();
+    float tsVoltage = measure_ts_voltage(); // Should be close to 0
 
     // Begin precharge sequence 
     enable_precharge_relay(); 
+    hvcState = HVC_PC_ACTIVE;
     
-    // Monitor TS voltage until it reaches threshold% of the pack voltage.
-    
+    // Monitor TS voltage until it reaches threshold% of the pack voltage.  
     uint32_t startTime = HAL_GetTick();
-    while (true) {
+    while (hvcState == HVC_PC_ACTIVE) {
         // Check for timeout
         if ((HAL_GetTick() - startTime) > PC_TIMEOUT_MS) {
-            result = HVC_TIMEOUT_FAULT;
+            hvcState = HVC_TIMEOUT_FAULT;
             goto cleanup;
         }
 
         // Check if 12V still present
         if (!sdc_present()) {
-            result = HVC_PRECHARGE_FAULT;
+            hvcState = HVC_PRECHARGE_FAULT;
             goto cleanup;
         }
 
         // Read TS voltage 
-
-        // Check if within threshold
+        tsVoltage = measure_ts_voltage();
+        if (tsVoltage >= PC_THRESH * packVoltage) {
+            if ((HAL_GetTick() - startTime) < PC_MINTIME_MS) {
+                hvcState = HVC_PRECHARGE_FAULT;
+                goto cleanup;
+            }
+            else {
+                enable_air_negative();
+                disable_precharge_relay();
+                hvcState = HVC_TS_ENERGIZED;
+            }
+        }
     }
-
-
-    // uint32_t previousTick = 0;
-    // uint32_t interval = 10; // Interval in milliseconds
-    
-    // if (HAL_GetTick() - previousTick > interval ) {
-    //     previousTick = HAL_GetTick();  
-    //     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12); // Status LED
-    // }
     
 cleanup:
     // disable all relays if any errors occurs
-    if (result != HVC_TS_ENERGIZED) {
+    if (hvcState != HVC_TS_ENERGIZED) {
         disable_all_relays();
     }
-    return result;
+    return hvcState;
 }
 
 HVC_State_t simple_precharge() {

@@ -42,7 +42,7 @@ void app_main() {
         // Precharge
         if (sdc_present() && state == HVC_STANDBY) {
             simple_precharge();
-            state = HVC_TS_ENERGIZED;
+            // state = active_precharge();
         } 
         if (!sdc_present()) {
             disable_all_relays();

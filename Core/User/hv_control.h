@@ -7,7 +7,7 @@
 typedef enum {
     HVC_OFF                 = 0x00U,
     HVC_STANDBY             = 0x01U,
-    HVC_PRECHARGE           = 0x02U,
+    HVC_PC_ACTIVE           = 0x02U,
     HVC_TS_ENERGIZED        = 0x03U,
     HVC_PRECHARGE_FAULT     = 0x04U,
     HVC_SDC_FAULT           = 0x05U,
