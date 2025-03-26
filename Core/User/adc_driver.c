@@ -24,7 +24,7 @@ bool adc_wait_for_conversion(uint32_t timeout_ms) {
     uint32_t startTime = HAL_GetTick(); 
     while (!adc_conversion_complete) {
         if ((HAL_GetTick() - startTime) > timeout_ms) {
-            return false;
+            return false; // ADC timeout occured 
         }
     }
     adc_conversion_complete = false; // reset flag
