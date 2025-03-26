@@ -10,7 +10,7 @@
 
 
 #define ADC_BUFFER_LEN 8
-#define ADC_DEFAULT_TIMEOUT_MS 1000
+#define ADC_DEFAULT_TIMEOUT_MS 5000
 
 // Expose the ADC buffer for other modules to access
 extern volatile uint16_t adc_buf[ADC_BUFFER_LEN];

@@ -40,26 +40,31 @@ void disable_all_relays(){
 
 
 bool sdc_present() {
-    if (adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
-        if (adc_buf[ADC_SDC_IN] >= SDC_ADC_MIN_VOLTAGE) {
-            return true;
-        }
+
+    
+
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        return false; // ADC Timeout
     }
-    else {
-        return false; // ADC timeout
-    }
-    return false;
+    return (adc_buf[ADC_SDC_IN] >= SDC_ADC_MIN_VOLTAGE);
 }
 
 
-HVC_State_t active_precharge() {    
+HVC_State_t active_precharge() {
+    HVC_State_t result = HVC_STANDBY;    
+
     if (!sdc_present()) {
-        return HVC_PRECHARGE_FAULT;
+        result = HVC_PRECHARGE_FAULT;
+        goto cleanup;
     }
 
     // Close AIR- and measure pack voltage
     enable_air_negative();
-    // while ()
+    
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        result = HVC_PRECHARGE_FAULT;
+        goto cleanup;
+    }
     
     
     
@@ -74,7 +79,12 @@ HVC_State_t active_precharge() {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12); // Status LED
     }
     
-    return HVC_TS_ENERGIZED;
+cleanup:
+    // disable all relays if any errors occurs
+    if (result != HVC_TS_ENERGIZED) {
+        disable_all_relays();
+    }
+    return result;
 }
 
 HVC_State_t simple_precharge() {
