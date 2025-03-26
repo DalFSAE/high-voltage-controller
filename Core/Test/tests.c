@@ -4,6 +4,15 @@
 #include "stm32g0xx_hal.h"
 #include "core_cm0plus.h"
 
+#define ADC_BUFFER_LEN 8
+
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
+extern TIM_HandleTypeDef htim2; 
+
+
+volatile uint16_t adc_buf[ADC_BUFFER_LEN];
+
 void test_failed() {
     while (true) {
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
@@ -14,6 +23,13 @@ void test_failed() {
     }
 
 }
+
+bool test_iso_voltage() {
+
+
+    return true;
+}
+
 
 
 bool contactor_test() {
@@ -43,15 +59,19 @@ bool contactor_test() {
 
 void run_tests() {
     bool debug = false;
-    
-    uint32_t start = HAL_GetTick();
-    uint32_t status_ms = 100;
+
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, ADC_BUFFER_LEN);
+    HAL_TIM_Base_Start(&htim2);
+
+
+    uint32_t previousTick = 0;
+    uint32_t interval = 500; // Interval in milliseconds
     
     // Start-up Tests (add breakpoint and change debug variable) 
     if (debug) {
         contactor_test();
     }
-
+    
     // Infinite Loop Tests (add breakpoint and change debug variable)
     while (true) {
         if (debug) {
@@ -59,16 +79,19 @@ void run_tests() {
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
         }
         
-        
-        HAL_Delay(10);
-        
+                
         // Status LED
-        if (HAL_GetTick() - start > status_ms) {
+
+        if (HAL_GetTick() - previousTick > interval ) {
+            previousTick = HAL_GetTick();  
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
-            break;
         }
-
-
     }
+}
 
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) 
+{
+     // Process the data
+     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_11); // Status LED
 }

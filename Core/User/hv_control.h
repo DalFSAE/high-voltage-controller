@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 bool simple_precharge(void);
-bool asyn_precharge(void)
+// bool asyn_precharge(void);
 
 
 #endif
