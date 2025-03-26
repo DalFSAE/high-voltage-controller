@@ -50,7 +50,6 @@ void app_main() {
         }
 
         // Status LED
-
         if (HAL_GetTick() - previousTick > interval ) {
             previousTick = HAL_GetTick();  
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED

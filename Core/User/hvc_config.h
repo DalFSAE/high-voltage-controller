@@ -20,8 +20,8 @@
 // PRECHARGE SETTINGS
 
 #define SDC_ADC_MIN_VOLTAGE 128
-#define PRECHARGE_LENGTH_MS 5000 
-#define PRECHARGE_TIMEOUT_MS 10000
-
+#define SIMPLE_PC_LENGTH_MS 5000    // 
+#define PC_TIMEOUT_MS 20000  // Throw a fault if PC is longer then value (ms)
+#define PC_THRESH 0.60f             // Bring TS to 95% of the pack voltage
 
 #endif

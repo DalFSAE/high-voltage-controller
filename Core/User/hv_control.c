@@ -36,12 +36,22 @@ void disable_all_relays(){
     HAL_GPIO_WritePin(AIR_P_PORT, AIR_P_PIN, GPIO_PIN_RESET);
 }
 
+float measure_pack_voltage() {
+    float packVoltage = 0.0f;
+    uint16_t adcPackVoltage = adc_buf[ADC_VBATT]; // read ADC
+    // convert to voltage 
+    return packVoltage;
+}
+
+float measure_ts_voltage() {
+    float tsVoltage = 0.0f;
+    uint16_t adcPackVoltage = adc_buf[ADC_VTS]; // read ADC
+    return tsVoltage;
+}
 
 
 
 bool sdc_present() {
-
-    
 
     if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
         return false; // ADC Timeout
@@ -58,26 +68,50 @@ HVC_State_t active_precharge() {
         goto cleanup;
     }
 
-    // Close AIR- and measure pack voltage
-    enable_air_negative();
     
+    enable_air_negative(); // Close AIR- 
+
+    // Halt function and wait for ADC to update
     if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
-        result = HVC_PRECHARGE_FAULT;
+        result = HVC_TIMEOUT_FAULT;
         goto cleanup;
     }
+
+    uint16_t batteryStartingVoltage = adc_buf[ADC_VBATT];
+    uint16_t tractiveStartingVoltage = adc_buf[ADC_VTS]; // Should be close to 0
+
+    // Begin precharge sequence 
+    enable_precharge_relay(); 
     
+    // Monitor TS voltage until it reaches threshold% of the pack voltage.
     
-    
-    
-    // Precharge feedback loop
-    
-    uint32_t previousTick = 0;
-    uint32_t interval = 500; // Interval in milliseconds
-    
-    if (HAL_GetTick() - previousTick > interval ) {
-        previousTick = HAL_GetTick();  
-        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12); // Status LED
+    uint32_t startTime = HAL_GetTick();
+    while (true) {
+        // Check for timeout
+        if ((HAL_GetTick() - startTime) > PC_TIMEOUT_MS) {
+            result = HVC_TIMEOUT_FAULT;
+            goto cleanup;
+        }
+
+        // Check if 12V still present
+        if (!sdc_present()) {
+            result = HVC_PRECHARGE_FAULT;
+            goto cleanup;
+        }
+
+        // Read TS voltage 
+
+        // Check if within threshold
     }
+
+
+    // uint32_t previousTick = 0;
+    // uint32_t interval = 10; // Interval in milliseconds
+    
+    // if (HAL_GetTick() - previousTick > interval ) {
+    //     previousTick = HAL_GetTick();  
+    //     HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12); // Status LED
+    // }
     
 cleanup:
     // disable all relays if any errors occurs
@@ -100,7 +134,7 @@ HVC_State_t simple_precharge() {
     // Close PC
     enable_precharge_relay();
     // Wait for precharge 
-    HAL_Delay(PRECHARGE_LENGTH_MS);
+    HAL_Delay(SIMPLE_PC_LENGTH_MS);
     // Close AIR+
     enable_air_positive();
     // Open PC
