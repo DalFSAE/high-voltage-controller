@@ -76,17 +76,10 @@ HVC_State_t active_precharge() {
         hvcState = HVC_PRECHARGE_FAULT;
         goto cleanup;
     }
-
     
     enable_air_negative(); // Close AIR- 
 
-    // Halt function and wait for ADC to update
-    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
-        hvcState = HVC_TIMEOUT_FAULT;
-        goto cleanup;
-    }
-
-    HAL_Delay(100); // gives ADC time to measure pack voltage 
+   HAL_Delay(100); // gives ADC time to measure pack voltage 
 
     float packVoltage = measure_pack_voltage();
     float tsVoltage = measure_ts_voltage(); // Should be close to 0

@@ -36,7 +36,6 @@ void app_main() {
     while (true) {
         if (debug) {
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
         }
         
         // Precharge
