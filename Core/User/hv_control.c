@@ -42,11 +42,19 @@ float amc1301_adc_to_voltage(uint16_t adc_val) {
 }
 
 float measure_pack_voltage() {
-    return amc1301_adc_to_voltage(adc_buf[ADC_VBATT]);
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        // Handle the ADC timeout error, for example by returning an error value.
+        return -1.0f; 
+   }
+   return amc1301_adc_to_voltage(adc_buf[ADC_VBATT]);;
 }
 
 float measure_ts_voltage() {
-    return amc1301_adc_to_voltage(adc_buf[ADC_VTS]);
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        // Handle the ADC timeout error accordingly.
+        return -1.0f;
+   }
+   return amc1301_adc_to_voltage(adc_buf[ADC_VTS]);
 }
 
 
@@ -75,7 +83,6 @@ HVC_State_t active_precharge() {
         hvcState = HVC_TIMEOUT_FAULT;
         goto cleanup;
     }
-
     float packVoltage = measure_pack_voltage();
     float tsVoltage = measure_ts_voltage(); // Should be close to 0
 
@@ -100,13 +107,14 @@ HVC_State_t active_precharge() {
 
         // Read TS voltage 
         tsVoltage = measure_ts_voltage();
+
         if (tsVoltage >= PC_THRESH * packVoltage) {
             if ((HAL_GetTick() - startTime) < PC_MINTIME_MS) {
                 hvcState = HVC_PRECHARGE_FAULT;
                 goto cleanup;
             }
             else {
-                enable_air_negative();
+                enable_air_positive();
                 disable_precharge_relay();
                 hvcState = HVC_TS_ENERGIZED;
             }
