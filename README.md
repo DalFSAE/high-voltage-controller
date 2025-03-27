@@ -8,12 +8,10 @@
     <img src="images/dms_logo.jpg" alt="Logo" width="500" height="200">
   </a>
 
-<h3 align="center">Real Time Vehicle Control Unit</h3>
-
+<h3 align="center">DalFSAE High Voltage Controller</h3>
   <p align="center">
-    DMS-RTOS-VCU
     <br />
-    <a href="https://github.com/AshtonDudley/DMS-RTOS-VCU"><strong>Explore the project »</strong></a>
+    <a href="https://github.com/DalFSAE/high-voltage-controller/"><strong>Explore the project »</strong></a>
     <br />
   </p>
 </div>
@@ -21,7 +19,7 @@
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these steps.
+To get a local copy up and running, follow these steps.
 
 ### Prerequisites
 
@@ -45,9 +43,8 @@ STM32CubeCLT (https://www.st.com/en/development-tools/stm32cubeclt.html)
 ```sh
 https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 ```
-
-### Installation
 <!--
+### Installation
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
