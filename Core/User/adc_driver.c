@@ -18,7 +18,6 @@ void adc_init() {
     return;
 }
 
-
 bool adc_wait_for_conversion(uint32_t timeout_ms) {
     // Wait for ADC buffer callback to trigger
     uint32_t startTime = HAL_GetTick(); 
@@ -31,7 +30,6 @@ bool adc_wait_for_conversion(uint32_t timeout_ms) {
     return true;
 
 }
-
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc1) {
      // Process the data

@@ -11,7 +11,8 @@ typedef enum {
     HVC_TS_ENERGIZED        = 0x03U,
     HVC_PRECHARGE_FAULT     = 0x04U,
     HVC_SDC_FAULT           = 0x05U,
-    HVC_TIMEOUT_FAULT       = 0x06U
+    HVC_TIMEOUT_FAULT       = 0x06U,
+    HVC_MINTIME_VAULT       = 0x7U
 } HVC_State_t;
 
 
