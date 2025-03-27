@@ -16,6 +16,9 @@ typedef enum {
 } HVC_State_t;
 
 
+void print_hv_adc_data(void);
+
+
 bool sdc_present(void);
 HVC_State_t simple_precharge(void);
 HVC_State_t active_precharge(void);

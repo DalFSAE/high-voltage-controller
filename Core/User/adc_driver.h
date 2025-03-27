@@ -31,4 +31,5 @@ void adc_init(void);
 
 bool adc_wait_for_conversion(uint32_t timeout_ms);
 
+
 #endif

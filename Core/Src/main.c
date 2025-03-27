@@ -100,7 +100,6 @@ int main(void)
   MX_FDCAN2_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_Delay(1000);
   run_tests();
   app_init();
   app_main();
