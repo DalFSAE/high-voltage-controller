@@ -59,7 +59,7 @@ float measure_pack_voltage() {
 
    float voltage = amc1301_adc_to_voltage(adc_buf[ADC_VBATT]);
    
-   debug_printf("[DEBUG] Pack Voltage: ");
+   debug_printf("[DEBUG] Pack Voltage (V):      ");
    debug_print_float(voltage, 2);
    debug_print("\n");
 
@@ -74,17 +74,48 @@ float measure_ts_voltage() {
 
    float voltage = amc1301_adc_to_voltage(adc_buf[ADC_VTS]);
 
-   debug_printf("[DEBUG] TS Voltage: ");
+   debug_printf("[DEBUG] TS Voltage (V):        ");
    debug_print_float(voltage, 2);
    debug_print("\n");
 
    return voltage;
 }
 
+float measure_cur_ch1() {
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        // Handle the ADC timeout error accordingly.
+        return -1.0f;
+   }
+    // inverse of y = 54.282x + 1808.8, based on testing data
+   float current = ((float)adc_buf[ADC_HALL_CH1] - 2138.5f) / 54.282f; 
+   debug_printf("[DEBUG] HALL CH1 Current (A):  ");
+   debug_print_float(current, 2);
+   debug_print("\n");
+   
+   return current;
+}
+
+float measure_cur_ch2() {
+    if (!adc_wait_for_conversion(ADC_DEFAULT_TIMEOUT_MS)) {
+        // Handle the ADC timeout error accordingly.
+        return -1.0f;
+   }
+
+   float current = ((float)adc_buf[ADC_HALL_CH1] - 2138.5f) / 54.282f; // NOT VERIFED WITH HIGH CURRENT SUPPLY
+   debug_printf("[DEBUG] HALL CH2 Current (A):  ");
+   debug_print_float(current, 2);
+   debug_print("\n");
+
+   return current;
+}
+
 void print_hv_adc_data() {
     measure_pack_voltage();
     measure_ts_voltage();
-    // TODO: Measure current sensor
+    measure_cur_ch1();
+    measure_cur_ch2();
+    debug_print("\n");
+
 }
 
 bool sdc_present() {
@@ -94,6 +125,37 @@ bool sdc_present() {
     return (adc_buf[ADC_SDC_IN] >= SDC_ADC_MIN_VOLTAGE);
 }
 
+void debug_print_hvc_state(HVC_State_t state) {
+    switch (state) {
+        case HVC_OFF:
+            debug_print("[STATE] OFF\n");
+            break;
+        case HVC_STANDBY:
+            debug_print("[STATE] STANDBY\n");
+            break;
+        case HVC_PC_ACTIVE:
+            debug_print("[STATE] PRECHARGE ACTIVE\n");
+            break;
+        case HVC_TS_ENERGIZED:
+            debug_print("[STATE] TS ENERGIZED\n");
+            break;
+        case HVC_PRECHARGE_FAULT:
+            debug_print("[STATE] PRECHARGE FAULT (SDC disconnected?)\n");
+            break;
+        case HVC_SDC_FAULT:
+            debug_print("[STATE] SDC FAULT\n");
+            break;
+        case HVC_TIMEOUT_FAULT:
+            debug_print("[STATE] PRECHARGE TIMEOUT\n");
+            break;
+        case HVC_MINTIME_VAULT:
+            debug_print("[STATE] TS reached voltage too early\n");
+            break;
+        default:
+            debug_printf("[STATE] UNKNOWN STATE: %d\n", state);
+            break;
+    }
+}
 
 HVC_State_t active_precharge() {
 
@@ -153,7 +215,7 @@ cleanup:
     // disable all relays if any errors occurs
     if (hvcState != HVC_TS_ENERGIZED) {
         disable_all_relays();
-        debug_printf("[DEBUG] Precharge Fault... State: %d\n", hvcState);
+        debug_printf("[DEBUG] PRECHARGE FAULT...\n");
     }
     return hvcState;
 }

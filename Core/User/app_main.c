@@ -20,7 +20,10 @@ extern UART_HandleTypeDef huart5;
 void app_init() {
     adc_init();
     debug_uart_init(&huart5);
-    debug_print("[DEBUG] HVC STARTED\n");
+
+    debug_print("#######################################\n");
+    debug_print("# HIGH VOLTAGE CONTROLLER INITIALIZED #\n");
+    debug_print("#######################################\n");
 
     return;
 }
@@ -38,20 +41,32 @@ void app_main() {
         // Precharge
         if (sdc_present() && state == HVC_STANDBY) {
             // simple_precharge();
+            debug_print("\n#######################################\n");
+            debug_print("#     STARTING PRECHARGE SEQUENCE     #\n");
+            debug_print("#######################################\n");
+
             state = active_precharge();
+            
+            debug_print("\n#######################################\n");
+            debug_print("#     PRECHARGE SEQUENCE COMPLETE     #\n");
+            debug_print("#######################################\n\n");
+
+            debug_print_hvc_state(state);
         }
         // Check for SDC   
         if (!sdc_present() && state == HVC_TS_ENERGIZED) {
             // debug_print("[DEBUG] HVC STANDBY\n");
             disable_all_relays();
             state = HVC_STANDBY;
+            debug_print("[DEBUG] SHUTDOWN CIRCUIT LOST...\n");
+            debug_print_hvc_state(state);
         }
         // Status LED
         if (HAL_GetTick() - previousTick > interval ) {
             previousTick = HAL_GetTick();  
             HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
             debug_printf("[DEBUG] Tick: %lu\n", HAL_GetTick());
-            debug_printf("[DEBUG] HVC State: %d\n", state);
+            debug_print_hvc_state(state);
             print_hv_adc_data();
 
         }        

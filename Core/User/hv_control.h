@@ -34,6 +34,7 @@ void disable_air_positive();
 
 void disable_all_relays();
 
+void debug_print_hvc_state(HVC_State_t state) ;
 
 // bool asyn_precharge(void);
 
