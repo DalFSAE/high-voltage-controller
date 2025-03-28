@@ -33,12 +33,15 @@ STM32CubeMX.log
 # ---------------------------
 # VSCode Settings (Optional)
 # ---------------------------
-# If you prefer to share project settings (like recommended extensions), you can remove these ignores.
-# Otherwise, ignore user-specific VSCode configurations.
+# Ignore VS Code user-specific workspace files
 .vscode/*.code-workspace
-.vscode/settings.json
-.vscode/tasks.json
-.vscode/launch.json
+
+# Don't ignore these project configs:
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/c_cpp_properties.json
 
 # ---------------------------
 # Logs and Temporary Files
