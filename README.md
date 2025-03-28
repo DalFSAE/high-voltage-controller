@@ -37,15 +37,16 @@ To get a local copy up and running, follow these steps.
   - [Download Link](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 
 - **CMake** and **Ninja**:
-  ```sh
+```sh
   # On Ubuntu
   sudo apt install cmake ninja-build
 
   # On Windows (via Chocolatey)
   choco install cmake ninja
-
+```
 
 ### Building
+
 Run the following commands from the project root: 
 ```sh 
 cmake -G Ninja -B build
@@ -65,6 +66,7 @@ Remove-Item -Recurse -Force build  # On PowerShell
 
 
 ### Project Structure 
+
 ```sh
 Core/                 → Application source and user code
 Drivers/              → CMSIS + HAL drivers
