@@ -49,6 +49,10 @@ To get a local copy up and running, follow these steps.
 
 ```sh
 Core/                 → Application source and user code
+  /Inc                → SMT32CubeMX generated .h headers 
+  /Src                → SMT32CubeMX generated .c source
+  /Test               → !! Project firmware tests
+  /User               → !! Project source code
 Drivers/              → CMSIS + HAL drivers
 build/                → Build artifacts (generated)
 cmake/                → Toolchain and CMake support
