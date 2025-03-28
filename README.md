@@ -4,12 +4,14 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/DalFSAE/high-voltage-controller">
     <img src="images/dms_logo.jpg" alt="Logo" width="500" height="200">
   </a>
 
 <h3 align="center">DalFSAE High Voltage Controller</h3>
   <p align="center">
+    STM32-based firmware for the Driver Monitoring System's High Voltage Controller.
+    Developed by the Dalhousie Formula SAE EV Team.
     <br />
     <a href="https://github.com/DalFSAE/high-voltage-controller/"><strong>Explore the project »</strong></a>
     <br />
@@ -23,63 +25,69 @@ To get a local copy up and running, follow these steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-
-* VSCode with the following extensions:
-
-```sh
-STM32 VS Code Extension (https://marketplace.visualstudio.com/items?itemName=stmicroelectronics.stm32-vscode-extension)
-Cortex-Debug (https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug)
-```
+- **VS Code** with extensions:
+  - [STM32 VS Code Extension](https://marketplace.visualstudio.com/items?itemName=stmicroelectronics.stm32-vscode-extension)
+  - [Cortex-Debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug)
   
-* STM32Cube Tools
+- **STM32Cube Tools**:
+  - [STM32CubeMX](https://www.st.com/en/development-tools/stm32cubemx.html)
+  - [STM32CubeCLT](https://www.st.com/en/development-tools/stm32cubeclt.html)
 
-```sh
-STM32CubeMX (https://www.st.com/en/development-tools/stm32cubemx.html)
-STM32CubeCLT (https://www.st.com/en/development-tools/stm32cubeclt.html)
+- **Arm GNU Toolchain**:
+  - [Download Link](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+
+- **CMake** and **Ninja**:
+  ```sh
+  # On Ubuntu
+  sudo apt install cmake ninja-build
+
+  # On Windows (via Chocolatey)
+  choco install cmake ninja
+
+
+### Building
+Run the following commands from the project root: 
+```sh 
+cmake -G Ninja -B build
+cmake --build build
 ```
 
-* Arm GNU Toolchain
+This will generate the firmware binary:
 ```sh
-https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
+build/DMS-High-Voltage-Controller.elf
 ```
-<!--
-### Installation
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
--->
+To remove all build artifacts:
+```sh
+rm -rf build         # On macOS/Linux
+Remove-Item -Recurse -Force build  # On PowerShell
+```
 
 
-<!-- USAGE EXAMPLES -->
-<!--
-## Usage
+### Project Structure 
+```sh
+Core/                 → Application source and user code
+Drivers/              → CMSIS + HAL drivers
+build/                → Build artifacts (generated)
+cmake/                → Toolchain and CMake support
+CMakeLists.txt        → CMake project root
+DMS-High-Voltage-Controller.ioc → STM32CubeMX config
+```
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-*** _For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
--->
 
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
 1. Create a new branch for your feature (`git checkout -b dev/feature`)
-2. Commit your Changes (`git commit -m 'Add some Feature'`)
+2. Commit your Changes (`git commit -m 'Added my feature'`)
 3. Push to the Branch (`git push origin dev/feature`)
-4. Open a Pull Request
+4. Open a Pull Request against `dev`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+### License 
+
+This project is licensed under the [MIT License](LICENSE).  
+© 2025 Dalhousie FSAE EV Team
