@@ -40,24 +40,35 @@ add_executable(${CMAKE_PROJECT_NAME})
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
-# Link directories setup
-target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined library search paths
-)
+
+# Define source directories
+set(USER_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/User)
+set(TEST_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/Test)
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user sources here
+    ${TEST_SRC_DIR}/tests.c
+    ${USER_SRC_DIR}/app_main.c
+    ${USER_SRC_DIR}/hv_control.c
+    ${USER_SRC_DIR}/heartbeat.c
+    ${USER_SRC_DIR}/adc_driver.c
+    ${USER_SRC_DIR}/debug_uart.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined include paths
+    ${USER_SRC_DIR}
+    ${TEST_SRC_DIR}
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined symbols
+)
+
+# Link directories setup
+target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    # Add user defined library search paths
 )
 
 # Add linked libraries

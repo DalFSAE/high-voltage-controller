@@ -1,3 +1,4 @@
+/*
 #include "stm32g0xx_hal.h"
 #include "main.h"
 #include "dma.h"
@@ -31,7 +32,7 @@ void can_heartbeat(){
 
     if (HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeartbeat, TxHeartbeatData) != HAL_OK)
     {
-        /* Transmission request Error */
+        // Transmission request Error 
         Error_Handler();
     }
 }
@@ -57,3 +58,4 @@ void HeartbeatTaskEntry(void *argument){
         osDelay(HEARTBEAT_TIME);
     }
 }
+*/
