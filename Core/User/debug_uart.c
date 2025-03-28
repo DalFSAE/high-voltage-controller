@@ -1,9 +1,10 @@
 #include "debug_uart.h"
 
-#include "debug_uart.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <math.h>
+
 
 #define DEBUG_UART_BUFFER_SIZE 128
 
