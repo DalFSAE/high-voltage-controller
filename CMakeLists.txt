@@ -19,7 +19,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Set the project name
-set(CMAKE_PROJECT_NAME DMS-High-Voltage-Controller)
+set(CMAKE_PROJECT_NAME high-voltage-controller)
 
 # Include toolchain file
 include("cmake/gcc-arm-none-eabi.cmake")
@@ -76,4 +76,18 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
+)
+
+
+# Tool for flashing
+set(STM32_PROGRAMMER_CLI "STM32_Programmer_CLI" CACHE FILEPATH "Path to STM32_Programmer_CLI")
+
+if(NOT STM32_PROGRAMMER_CLI)
+    message(FATAL_ERROR "STM32_PROGRAMMER_CLI not set. Please define the path using -DSTM32_PROGRAMMER_CLI=...")
+endif()
+
+add_custom_target(flash
+    COMMAND ${STM32_PROGRAMMER_CLI} -c port=SWD -d $<TARGET_FILE:${PROJECT_NAME}> -rst
+    DEPENDS ${PROJECT_NAME}
+    COMMENT "Flashing firmware to target via ST-Link..."
 )

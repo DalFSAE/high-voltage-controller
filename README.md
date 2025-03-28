@@ -37,15 +37,32 @@ To get a local copy up and running, follow these steps.
   - [Download Link](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 
 - **CMake** and **Ninja**:
-  ```sh
+```sh
   # On Ubuntu
   sudo apt install cmake ninja-build
 
   # On Windows (via Chocolatey)
   choco install cmake ninja
+```
+
+### Project Structure 
+
+```sh
+Core/                 → Application source and user code
+  /Inc                → SMT32CubeMX generated .h headers 
+  /Src                → SMT32CubeMX generated .c source
+  /Test               → !! Project firmware tests
+  /User               → !! Project source code
+Drivers/              → CMSIS + HAL drivers
+build/                → Build artifacts (generated)
+cmake/                → Toolchain and CMake support
+CMakeLists.txt        → CMake project root
+DMS-High-Voltage-Controller.ioc → STM32CubeMX config
+```
 
 
 ### Building
+
 Run the following commands from the project root: 
 ```sh 
 cmake -G Ninja -B build
@@ -64,16 +81,17 @@ Remove-Item -Recurse -Force build  # On PowerShell
 ```
 
 
-### Project Structure 
-```sh
-Core/                 → Application source and user code
-Drivers/              → CMSIS + HAL drivers
-build/                → Build artifacts (generated)
-cmake/                → Toolchain and CMake support
-CMakeLists.txt        → CMake project root
-DMS-High-Voltage-Controller.ioc → STM32CubeMX config
-```
+### Flashing the Firmware
 
+Use this command to build and flash the firmware via ST-Link:
+
+```sh
+cmake --build build --target flash
+```
+Make sure the STM32CubeProgrammer CLI is installed and available on your system PATH. You can override the path like this:
+```sh
+cmake -DSTM32_PROGRAMMER_CLI="C:/ST/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe" -B build
+```
 
 
 <!-- CONTRIBUTING -->
