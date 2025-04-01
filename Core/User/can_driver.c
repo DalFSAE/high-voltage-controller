@@ -2,6 +2,8 @@
 
 
 #include "fdcan.h"
+#include "stm32g0xx_hal.h"
+
 
 #include "can_driver.h"
 
@@ -16,7 +18,6 @@ void can_init(void) {
 }
 
 void can_heatbeat(void) {
+
     return;
 }
-
-
