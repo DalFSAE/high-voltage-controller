@@ -39,8 +39,6 @@
         * EVENT_OUT
         * EXTI
      PA15   ------> SPI1_NSS
-     PB8   ------> S_TIM16_CH1
-     PB9   ------> S_TIM17_CH1
 */
 void MX_GPIO_Init(void)
 {
@@ -58,7 +56,7 @@ void MX_GPIO_Init(void)
                           |AIR_M_EN_Pin|AIR_P_EN_Pin|GPIO_PIN_10, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SDC_EN_Pin|AUX_EN_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SDC_EN_Pin|AUX_EN_Pin|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PC11 PC12 PC13 PCPin
                            PCPin PCPin PC10 */
@@ -69,8 +67,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin */
-  GPIO_InitStruct.Pin = SDC_EN_Pin|AUX_EN_Pin;
+  /*Configure GPIO pins : PBPin PBPin PB8 PB9 */
+  GPIO_InitStruct.Pin = SDC_EN_Pin|AUX_EN_Pin|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -95,22 +93,6 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF0_SPI1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB8 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF2_TIM16;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_9;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF2_TIM17;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
