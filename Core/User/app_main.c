@@ -52,7 +52,7 @@ void app_main() {
     }
 
 
-    while (true) {
+    while (debug == 0) {
         // Precharge
         if (sdc_present() && state == HVC_STANDBY) {
             // simple_precharge();

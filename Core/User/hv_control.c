@@ -47,18 +47,22 @@ void disable_air_negative(){
 bool read_bms_status() {
     if (HAL_GPIO_ReadPin(BMS_FAULT_GPIO_Port, BMS_FAULT_Pin)) {
         debug_print("[DEBUG] BMS Status: Fault\n");
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
         return false;
     }
     debug_print("[DEBUG] BMS Status: Latched\n");
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
     return true; 
 }
 
 bool read_imd_status() {
     if (HAL_GPIO_ReadPin(IMD_FAULT_GPIO_Port, IMD_FAULT_Pin)) {
         debug_print("[DEBUG] IMD Status: Fault\n");
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
         return false;
     }
     debug_print("[DEBUG] IMD Status: Latched\n");
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
     return true;
 }
 
