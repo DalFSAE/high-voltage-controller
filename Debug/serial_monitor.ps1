@@ -21,6 +21,8 @@ try {
         if ($port.BytesToRead -gt 0) {
             $data = $port.ReadExisting()
             Write-Host -NoNewline $data
+            [Console]::Write($data)
+
         }
         Start-Sleep -Milliseconds 100
     }

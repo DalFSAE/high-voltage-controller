@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "hvc_config.h": "c",
+        "hv_control.h": "c"
+    }
+}

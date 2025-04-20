@@ -20,11 +20,12 @@ extern UART_HandleTypeDef huart5;
 void app_init() {
     adc_init();
     debug_uart_init(&huart5);
-
+    
     debug_print("#######################################\n");
     debug_print("# HIGH VOLTAGE CONTROLLER INITIALIZED #\n");
     debug_print("#######################################\n");
-
+    
+    enable_shutdown_circuit();
     return;
 }
 
@@ -37,6 +38,20 @@ void app_main() {
     uint32_t previousTick = 0;
     uint32_t interval = 1000; // Interval in milliseconds    
 
+    uint32_t debug = 0;
+
+    if (debug == 1) {
+        enable_air_negative();
+        HAL_Delay(1000);
+        disable_air_negative();
+        HAL_Delay(1000);
+
+        enable_air_positive();
+        HAL_Delay(1000);
+        disable_air_positive();
+    }
+
+
     while (true) {
         // Precharge
         if (sdc_present() && state == HVC_STANDBY) {
@@ -46,6 +61,7 @@ void app_main() {
             debug_print("#######################################\n");
 
             state = active_precharge();
+            // state = simple_precharge();
             
             debug_print("\n#######################################\n");
             debug_print("#     PRECHARGE SEQUENCE COMPLETE     #\n");
