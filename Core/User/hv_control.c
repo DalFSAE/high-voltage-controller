@@ -47,22 +47,22 @@ void disable_air_negative(){
 bool read_bms_status() {
     if (HAL_GPIO_ReadPin(BMS_FAULT_GPIO_Port, BMS_FAULT_Pin)) {
         debug_print("[DEBUG] BMS Status: Fault\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // BMS, connected to VCU
         return false;
     }
     debug_print("[DEBUG] BMS Status: Latched\n");
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // BMS
     return true; 
 }
 
 bool read_imd_status() {
     if (HAL_GPIO_ReadPin(IMD_FAULT_GPIO_Port, IMD_FAULT_Pin)) {
         debug_print("[DEBUG] IMD Status: Fault\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET); // IMD, not currently connected 
         return false;
     }
     debug_print("[DEBUG] IMD Status: Latched\n");
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET); // IMD
     return true;
 }
 
@@ -249,19 +249,36 @@ HVC_State_t simple_precharge() {
     }
     
     debug_print("[DEBUG] Precharge Sequence Started\n");
-
+    
+    uint32_t previousTick = 0;
 
     // Close AIR-
     enable_air_negative();
     HAL_Delay(100);
+
     // Close PC
     enable_precharge_relay();
-    // Wait for precharge 
-    HAL_Delay(SIMPLE_PC_LENGTH_MS);
+    
+    // Monitor TS voltage during simple precharge delay
+    uint32_t startTick = HAL_GetTick();
+    while ((HAL_GetTick() - startTick) < SIMPLE_PC_LENGTH_MS) {
+        // Check for SDC loss
+        if (!sdc_present()) {
+            debug_print("[DEBUG] SDC Lost During Simple Precharge\n");
+            disable_all_relays();
+            return HVC_PRECHARGE_FAULT;
+        }
+
+        float tsVoltage = measure_ts_voltage();
+        HAL_Delay(100); // print every 100ms
+    }
+
     // Close AIR+
     enable_air_positive();
+
     // Open PC
-    HAL_Delay(1000);
+    HAL_Delay(1000);    // crossover time 
     disable_precharge_relay();
+
     return HVC_TS_ENERGIZED;
 }
