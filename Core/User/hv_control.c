@@ -66,6 +66,16 @@ bool read_imd_status() {
     return true;
 }
 
+bool read_bms_and_imd_status() {
+    if (read_bms_status() && read_imd_status()) {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // Both latched, No faults, Enable TSSI GREEN
+        return true;
+    }
+    return false;
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // Enable TSSI RED
+
+}
+
 void disable_air_positive(){
     debug_print("[DEBUG] Positive AIR Disabled\n");
     HAL_GPIO_WritePin(AIR_P_PORT, AIR_P_PIN, GPIO_PIN_RESET);
