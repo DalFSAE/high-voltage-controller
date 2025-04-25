@@ -47,22 +47,22 @@ void disable_air_negative(){
 bool read_bms_status() {
     if (HAL_GPIO_ReadPin(BMS_FAULT_GPIO_Port, BMS_FAULT_Pin)) {
         debug_print("[DEBUG] BMS Status: Fault\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // BMS, connected to VCU
+        // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // BMS, connected to VCU
         return false;
     }
     debug_print("[DEBUG] BMS Status: Latched\n");
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // BMS
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // BMS
     return true; 
 }
 
 bool read_imd_status() {
     if (HAL_GPIO_ReadPin(IMD_FAULT_GPIO_Port, IMD_FAULT_Pin)) {
         debug_print("[DEBUG] IMD Status: Fault\n");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET); // IMD, not currently connected 
+        // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET); // IMD, not currently connected 
         return false;
     }
     debug_print("[DEBUG] IMD Status: Latched\n");
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET); // IMD
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET); // IMD
     return true;
 }
 
@@ -184,6 +184,7 @@ void debug_print_hvc_state(HVC_State_t state) {
 
     read_imd_status();
     read_bms_status();
+    read_bms_and_imd_status();
 }
 
 

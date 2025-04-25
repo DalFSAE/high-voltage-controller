@@ -4,6 +4,7 @@
 #include "hv_control.h"
 #include "adc_driver.h"
 #include "debug_uart.h"
+#include "can_driver.h"
 
 #include "stm32g0xx_hal.h"
 #include "core_cm0plus.h"
@@ -20,6 +21,7 @@ extern UART_HandleTypeDef huart5;
 void app_init() {
     adc_init();
     debug_uart_init(&huart5);
+    can_init();
     
     debug_print("#######################################\n");
     debug_print("# HIGH VOLTAGE CONTROLLER INITIALIZED #\n");
@@ -35,9 +37,13 @@ void app_main() {
 
     HVC_State_t state = HVC_STANDBY;
 
-    uint32_t previousTick = 0;
-    uint32_t interval = 1000; // Interval in milliseconds    
+    uint32_t led_prev   = 0;      /* 1-s heartbeat  */
+    uint32_t can10_prev = 0;      /* 10-ms CAN task */
+    uint32_t can50_prev = 0;      /* 50-ms CAN task */
 
+    const uint32_t led_interval   = 1000; /* ms */
+    const uint32_t can10_interval =   10;
+    const uint32_t can50_interval =   50;
     uint32_t debug = 0;
 
     if (debug == 1) {
@@ -69,6 +75,7 @@ void app_main() {
 
             debug_print_hvc_state(state);
         }
+
         // Check for SDC   
         if (!sdc_present() && state == HVC_TS_ENERGIZED) {
             // debug_print("[DEBUG] HVC STANDBY\n");
@@ -77,15 +84,34 @@ void app_main() {
             debug_print("[DEBUG] SHUTDOWN CIRCUIT LOST...\n");
             debug_print_hvc_state(state);
         }
-        // Status LED
-        if (HAL_GetTick() - previousTick > interval ) {
-            previousTick = HAL_GetTick();  
-            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10); // Status LED
-            debug_printf("[DEBUG] Tick: %lu\n", HAL_GetTick());
+
+        uint32_t now = HAL_GetTick();
+        if (now - led_prev >= led_interval)
+        {
+            led_prev = now;
+            HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_10);       /* status LED */
+            debug_printf("[DEBUG] Tick: %lu\n", now);
             debug_print_hvc_state(state);
             print_hv_adc_data();
+        }
+                /* ───── 10-ms CAN heartbeat ───── */
+        if (now - can10_prev >= can10_interval)
+        {
+            can10_prev = now;
+            bool imd_ok = read_imd_status();
+            bool bms_ok = read_bms_status();
+            can_task_10ms(imd_ok, bms_ok, (uint8_t)state);
+        }
 
-        }        
+        /* ───── 50-ms CAN slow signals ───── */
+        if (now - can50_prev >= can50_interval)
+        {
+            can50_prev = now;
+            can_task_50ms(measure_pack_voltage(),
+                          measure_ts_voltage(),
+                          measure_cur_ch1(),
+                          measure_cur_ch2());
+        }      
     }
 }
 
