@@ -3,9 +3,11 @@
 #include "hvc_config.h"
 #include "adc_driver.h"
 #include "debug_uart.h"
+#include <stdint.h> 
 
 #include "stm32g0xx_hal.h"
 
+float measure_ts_voltage();
 
 void enable_shutdown_circuit() {
     debug_print("[DEBUG] Shutdown Circuit Enabled\n");
@@ -71,8 +73,8 @@ bool read_bms_and_imd_status() {
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // Both latched, No faults, Enable TSSI GREEN
         return true;
     }
-    return false;
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // Enable TSSI RED
+    return false;
 
 }
 

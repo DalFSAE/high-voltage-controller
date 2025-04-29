@@ -39,7 +39,9 @@ void debug_print_hvc_state(HVC_State_t state) ;
 void enable_shutdown_circuit();
 void disable_shutdown_circuit();
 
-
+bool read_bms_and_imd_status();
+bool read_bms_status();
+bool read_imd_stat8s();
 
 // bool asyn_precharge(void);
 

@@ -44,7 +44,7 @@ void app_main() {
     const uint32_t led_interval   = 1000; /* ms */
     const uint32_t can10_interval =   10;
     const uint32_t can50_interval =   50;
-    uint32_t debug = 0;
+     uint32_t debug = 0;
 
     if (debug == 1) {
         enable_air_negative();
