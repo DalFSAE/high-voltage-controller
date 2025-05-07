@@ -71,8 +71,8 @@ bool read_bms_and_imd_status() {
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // Both latched, No faults, Enable TSSI GREEN
         return true;
     }
-    return false;
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // Enable TSSI RED
+    return false;
 
 }
 
