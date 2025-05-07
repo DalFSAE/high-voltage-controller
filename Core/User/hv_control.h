@@ -36,6 +36,11 @@ void disable_all_relays();
 
 void debug_print_hvc_state(HVC_State_t state) ;
 
+void enable_shutdown_circuit();
+void disable_shutdown_circuit();
+
+
+
 // bool asyn_precharge(void);
 
 

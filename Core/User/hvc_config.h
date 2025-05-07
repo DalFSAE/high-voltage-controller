@@ -21,8 +21,8 @@
 
 #define SDC_ADC_MIN_VOLTAGE 128
 #define SIMPLE_PC_LENGTH_MS 5000
-#define PC_TIMEOUT_MS 20000     // Throw a fault if PC is longer than value (ms)
+#define PC_TIMEOUT_MS 10000     // Throw a fault if PC is longer than value (ms)
 #define PC_MINTIME_MS 100       // Throw a fault if PC is shorter than value (ms)    
-#define PC_THRESH 0.60f         // Bring TS to 95% of the pack voltage
+#define PC_THRESH 0.90f         // Bring TS to 95% of the pack voltage
 
 #endif

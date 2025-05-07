@@ -7,6 +7,18 @@
 #include "stm32g0xx_hal.h"
 
 
+void enable_shutdown_circuit() {
+    debug_print("[DEBUG] Shutdown Circuit Enabled\n");
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_SET);
+}
+
+void disable_shutdown_circuit() {
+    debug_print("[DEBUG] Shutdown Circuit Disabled\n");
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_RESET);
+}
+
+
+
 void enable_precharge_relay(){
     debug_print("[DEBUG] Precharge Relay Enabled\n");
     HAL_GPIO_WritePin(PC_PORT, PC_PIN, GPIO_PIN_SET);
@@ -30,6 +42,38 @@ void disable_precharge_relay(){
 void disable_air_negative(){
     debug_print("[DEBUG] Negative AIR Disabled\n");
     HAL_GPIO_WritePin(AIR_M_PORT, AIR_M_PIN, GPIO_PIN_RESET);
+}
+
+bool read_bms_status() {
+    if (HAL_GPIO_ReadPin(BMS_FAULT_GPIO_Port, BMS_FAULT_Pin)) {
+        debug_print("[DEBUG] BMS Status: Fault\n");
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // BMS, connected to VCU
+        return false;
+    }
+    debug_print("[DEBUG] BMS Status: Latched\n");
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // BMS
+    return true; 
+}
+
+bool read_imd_status() {
+    if (HAL_GPIO_ReadPin(IMD_FAULT_GPIO_Port, IMD_FAULT_Pin)) {
+        debug_print("[DEBUG] IMD Status: Fault\n");
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET); // IMD, not currently connected 
+        return false;
+    }
+    debug_print("[DEBUG] IMD Status: Latched\n");
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET); // IMD
+    return true;
+}
+
+bool read_bms_and_imd_status() {
+    if (read_bms_status() && read_imd_status()) {
+        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET); // Both latched, No faults, Enable TSSI GREEN
+        return true;
+    }
+    return false;
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); // Enable TSSI RED
+
 }
 
 void disable_air_positive(){
@@ -127,35 +171,21 @@ bool sdc_present() {
 
 void debug_print_hvc_state(HVC_State_t state) {
     switch (state) {
-        case HVC_OFF:
-            debug_print("[STATE] OFF\n");
-            break;
-        case HVC_STANDBY:
-            debug_print("[STATE] STANDBY\n");
-            break;
-        case HVC_PC_ACTIVE:
-            debug_print("[STATE] PRECHARGE ACTIVE\n");
-            break;
-        case HVC_TS_ENERGIZED:
-            debug_print("[STATE] TS ENERGIZED\n");
-            break;
-        case HVC_PRECHARGE_FAULT:
-            debug_print("[STATE] PRECHARGE FAULT (SDC disconnected?)\n");
-            break;
-        case HVC_SDC_FAULT:
-            debug_print("[STATE] SDC FAULT\n");
-            break;
-        case HVC_TIMEOUT_FAULT:
-            debug_print("[STATE] PRECHARGE TIMEOUT\n");
-            break;
-        case HVC_MINTIME_VAULT:
-            debug_print("[STATE] TS reached voltage too early\n");
-            break;
-        default:
-            debug_printf("[STATE] UNKNOWN STATE: %d\n", state);
-            break;
+        case HVC_OFF:               debug_print("[STATE] OFF\n"); break;
+        case HVC_STANDBY:           debug_print("[STATE] STANDBY\n"); break;
+        case HVC_PC_ACTIVE:         debug_print("[STATE] PRECHARGE ACTIVE\n"); break;
+        case HVC_TS_ENERGIZED:      debug_print("[STATE] TS ENERGIZED\n"); break;
+        case HVC_PRECHARGE_FAULT:   debug_print("[STATE] PRECHARGE FAULT (SDC disconnected?)\n"); break;
+        case HVC_SDC_FAULT:         debug_print("[STATE] SDC FAULT\n"); break;
+        case HVC_TIMEOUT_FAULT:     debug_print("[STATE] PRECHARGE TIMEOUT\n"); break;
+        case HVC_MINTIME_VAULT:     debug_print("[STATE] TS reached voltage too early\n"); break;
+        default:                    debug_printf("[STATE] UNKNOWN STATE: %d\n", state); break;
     }
+
+    read_imd_status();
+    read_bms_status();
 }
+
 
 HVC_State_t active_precharge() {
 
@@ -205,6 +235,7 @@ HVC_State_t active_precharge() {
             }
             else {
                 enable_air_positive();
+                HAL_Delay(1000);
                 disable_precharge_relay();
                 hvcState = HVC_TS_ENERGIZED;
             }
@@ -226,17 +257,38 @@ HVC_State_t simple_precharge() {
     if (!sdc_present()) {
         return false;
     }
+    
+    debug_print("[DEBUG] Precharge Sequence Started\n");
+    
+    uint32_t previousTick = 0;
 
     // Close AIR-
     enable_air_negative();
     HAL_Delay(100);
+
     // Close PC
     enable_precharge_relay();
-    // Wait for precharge 
-    HAL_Delay(SIMPLE_PC_LENGTH_MS);
+    
+    // Monitor TS voltage during simple precharge delay
+    uint32_t startTick = HAL_GetTick();
+    while ((HAL_GetTick() - startTick) < SIMPLE_PC_LENGTH_MS) {
+        // Check for SDC loss
+        if (!sdc_present()) {
+            debug_print("[DEBUG] SDC Lost During Simple Precharge\n");
+            disable_all_relays();
+            return HVC_PRECHARGE_FAULT;
+        }
+
+        float tsVoltage = measure_ts_voltage();
+        HAL_Delay(100); // print every 100ms
+    }
+
     // Close AIR+
     enable_air_positive();
+
     // Open PC
+    HAL_Delay(1000);    // crossover time 
     disable_precharge_relay();
+
     return HVC_TS_ENERGIZED;
 }
