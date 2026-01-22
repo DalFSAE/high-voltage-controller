@@ -57,6 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SPI3_WAKE_Pin GPIO_PIN_14
+#define SPI3_WAKE_GPIO_Port GPIOC
 #define PC_EN_Pin GPIO_PIN_0
 #define PC_EN_GPIO_Port GPIOC
 #define AIR_M_EN_Pin GPIO_PIN_1
@@ -71,6 +73,8 @@ void Error_Handler(void);
 #define HALL_CH1_GPIO_Port GPIOA
 #define HALL_CH2_Pin GPIO_PIN_3
 #define HALL_CH2_GPIO_Port GPIOA
+#define TSSI_EN_Pin GPIO_PIN_4
+#define TSSI_EN_GPIO_Port GPIOA
 #define IMON_Pin GPIO_PIN_6
 #define IMON_GPIO_Port GPIOA
 #define SDC_IN_Pin GPIO_PIN_0
@@ -81,14 +85,28 @@ void Error_Handler(void);
 #define SDC_EN_GPIO_Port GPIOB
 #define AUX_EN_Pin GPIO_PIN_12
 #define AUX_EN_GPIO_Port GPIOB
+#define SDC_FLAG_Pin GPIO_PIN_13
+#define SDC_FLAG_GPIO_Port GPIOB
 #define CHARGER_FLAG_Pin GPIO_PIN_14
 #define CHARGER_FLAG_GPIO_Port GPIOB
 #define IMD_DATA_Pin GPIO_PIN_8
 #define IMD_DATA_GPIO_Port GPIOA
-#define IMD_FAULT_Pin GPIO_PIN_6
-#define IMD_FAULT_GPIO_Port GPIOC
-#define BMS_FAULT_Pin GPIO_PIN_7
-#define BMS_FAULT_GPIO_Port GPIOC
+#define IMD_RELAY_Pin GPIO_PIN_6
+#define IMD_RELAY_GPIO_Port GPIOC
+#define BMS_RELAY_Pin GPIO_PIN_7
+#define BMS_RELAY_GPIO_Port GPIOC
+#define BMS_FAULT_OUT_Pin GPIO_PIN_8
+#define BMS_FAULT_OUT_GPIO_Port GPIOD
+#define LED1_Pin GPIO_PIN_0
+#define LED1_GPIO_Port GPIOD
+#define LED2_Pin GPIO_PIN_1
+#define LED2_GPIO_Port GPIOD
+#define SPI1_WAKE_Pin GPIO_PIN_4
+#define SPI1_WAKE_GPIO_Port GPIOD
+#define SPI1_INT_Pin GPIO_PIN_4
+#define SPI1_INT_GPIO_Port GPIOB
+#define PWM1_OUT_Pin GPIO_PIN_8
+#define PWM1_OUT_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

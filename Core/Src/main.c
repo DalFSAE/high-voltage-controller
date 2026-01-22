@@ -21,6 +21,7 @@
 #include "adc.h"
 #include "dma.h"
 #include "fdcan.h"
+#include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -99,6 +100,9 @@ int main(void)
   MX_TIM1_Init();
   MX_FDCAN2_Init();
   MX_TIM2_Init();
+  MX_SPI1_Init();
+  MX_SPI3_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   run_tests();
   app_init();
