@@ -91,10 +91,10 @@ void Error_Handler(void);
 #define CHARGER_FLAG_GPIO_Port GPIOB
 #define IMD_DATA_Pin GPIO_PIN_8
 #define IMD_DATA_GPIO_Port GPIOA
-#define IMD_RELAY_Pin GPIO_PIN_6
-#define IMD_RELAY_GPIO_Port GPIOC
-#define BMS_RELAY_Pin GPIO_PIN_7
-#define BMS_RELAY_GPIO_Port GPIOC
+#define IMD_FAULT_Pin GPIO_PIN_6
+#define IMD_FAULT_GPIO_Port GPIOC
+#define BMS_FAULT_Pin GPIO_PIN_7
+#define BMS_FAULT_GPIO_Port GPIOC
 #define BMS_FAULT_OUT_Pin GPIO_PIN_8
 #define BMS_FAULT_OUT_GPIO_Port GPIOD
 #define LED1_Pin GPIO_PIN_0
