@@ -18,6 +18,10 @@
   </p>
 </div>
 
+<img width="1192" height="942" alt="image" src="https://github.com/user-attachments/assets/cebbdf0b-a263-4e47-b0e6-571a7b03fa8e" />
+
+
+
 <!-- GETTING STARTED -->
 ## Getting Started
 

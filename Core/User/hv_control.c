@@ -21,6 +21,18 @@ void disable_shutdown_circuit() {
 
 
 
+void enable_shutdown_circuit() {
+    debug_print("[DEBUG] Shutdown Circuit Enabled\n");
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_SET);
+}
+
+void disable_shutdown_circuit() {
+    debug_print("[DEBUG] Shutdown Circuit Disabled\n");
+    HAL_GPIO_WritePin(SDC_EN_GPIO_Port, SDC_EN_Pin, GPIO_PIN_RESET);
+}
+
+
+
 void enable_precharge_relay(){
     debug_print("[DEBUG] Precharge Relay Enabled\n");
     HAL_GPIO_WritePin(PC_PORT, PC_PIN, GPIO_PIN_SET);
