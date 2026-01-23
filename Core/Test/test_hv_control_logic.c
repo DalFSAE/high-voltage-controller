@@ -38,6 +38,6 @@ int main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_hvc_init_sets_defaults);
-    // RUN_TEST(test_init_state_outputs_are_safe_off);
+    RUN_TEST(test_init_state_outputs_are_safe_off);
     return UNITY_END();
 }
