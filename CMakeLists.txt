@@ -54,6 +54,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${USER_SRC_DIR}/adc_driver.c
     ${USER_SRC_DIR}/debug_uart.c
     ${USER_SRC_DIR}/can_driver.c
+    ${USER_SRC_DIR}/relay.c
 )
 
 # Add include paths
