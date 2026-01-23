@@ -41,7 +41,7 @@ void disable_shutdown_circuit();
 
 bool read_bms_and_imd_status();
 bool read_bms_status();
-bool read_imd_stat8s();
+bool read_imd_status();
 
 // bool asyn_precharge(void);
 
