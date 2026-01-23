@@ -48,3 +48,4 @@ STM32CubeMX.log
 # ---------------------------
 *.log
 /.vscode
+/build-tests

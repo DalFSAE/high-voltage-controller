@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <stdbool.h>
 
 // HVC State Machine 
 typedef enum {
