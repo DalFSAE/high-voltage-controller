@@ -1,0 +1,15 @@
+CompileFlags:
+  Add:
+    - -ferror-limit=0
+    - -Wno-implicit-int
+    - -target
+    - arm-none-eabi
+
+CompilationDatabase: build/Debug
+
+Diagnostics:
+  Suppress:
+    - unused-includes
+    - unknown_typename
+    - unknown_typename_suggest
+    - typename_requires_specqual
