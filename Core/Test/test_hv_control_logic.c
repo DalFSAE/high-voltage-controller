@@ -17,7 +17,7 @@ void test_hvc_init_sets_defaults(void)
 
     TEST_ASSERT_EQUAL(HVC_S_INIT, ctx.state);
     TEST_ASSERT_EQUAL_UINT32(123, ctx.start_tick_ms);
-    TEST_ASSERT_EQUAL(HVC_FAULT_CLEAR, ctx.fault);
+    TEST_ASSERT_EQUAL(HVC_FAULT_CLEAR, ctx.fault);  
 }
 
 void test_init_state_outputs_are_safe_off(void)
@@ -35,8 +35,20 @@ void test_init_state_outputs_are_safe_off(void)
 }
 
 void test_mock_precharge_sequence(void) {
-    
+    HvcContext ctx;
+    HvcOutputs out;
+    HvcInputs in = {0};
+
+    hvc_init(&ctx, 0);
+
+    for (uint32_t time_ms = 0; time_ms <= 6000; time_ms += 100) {
+        in.now_ms = time_ms;
+        hvc_update(&ctx, &in, &out);
+    }
+    TEST_ASSERT_EQUAL(HVC_S_TS_ENERGIZED, ctx.state);
 }
+
+
 
 int main(void)
 {
