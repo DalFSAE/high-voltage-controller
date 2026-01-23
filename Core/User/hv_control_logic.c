@@ -48,4 +48,20 @@ void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
 
     // Transition to STANDBY after initialization
     context->state = HVC_S_STANDBY;
+}       
+
+void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+    return;
+}
+
+void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+    return;
+}
+
+void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+    return;
+}
+
+void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+    return;
 }
