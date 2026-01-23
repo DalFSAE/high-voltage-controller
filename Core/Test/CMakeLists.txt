@@ -4,8 +4,9 @@ include(CTest)
 enable_testing()
 
 add_executable(hvc_tests
+unity.c
   test_hv_control_logic.c
-  unity.c
+  mock_ts.c
   ../User/hv_control_logic.c
 )
 
