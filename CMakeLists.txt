@@ -45,11 +45,10 @@ add_subdirectory(cmake/stm32cubemx)
 
 # Define source directories
 set(USER_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/User)
-set(TEST_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/Test)
+# set(TEST_SRC_DIR ${CMAKE_SOURCE_DIR}/Core/Test)
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    ${TEST_SRC_DIR}/tests.c
     ${USER_SRC_DIR}/app_main.c
     ${USER_SRC_DIR}/hv_control.c
     ${USER_SRC_DIR}/heartbeat.c
