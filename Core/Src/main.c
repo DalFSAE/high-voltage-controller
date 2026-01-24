@@ -27,7 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tests.h"
 #include "app_main.h"
 /* USER CODE END Includes */
 
