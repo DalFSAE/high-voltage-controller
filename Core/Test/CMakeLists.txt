@@ -10,6 +10,7 @@ add_executable(hvc_tests
   test_hv_control_logic.c
   test_soc.c
   ../User/hv_control_logic.c
+  ../User/integrator.c
 )
 
 target_include_directories(hvc_tests PRIVATE

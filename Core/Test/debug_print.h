@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef DEBUG_PRINTF
-#define DEBUG_PRINTF 0
+#define DEBUG_PRINTF 1
 #endif
 
 #if DEBUG_PRINTF
