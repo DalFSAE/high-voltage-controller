@@ -121,8 +121,8 @@ static inline float pid_step_ms(PID *p, float setpoint, float measurement, uint3
     float u_i = p->ki * error_int;
 
     // derivative term ud(t) = kd * de(t)/dt
-    float error_dt = differentiator_step_ms(&p->d, measurement, now_ms);
-    float u_d = p->kd * error_dt;
+    float dmeas_dt = differentiator_step_ms(&p->d, measurement, now_ms);
+    float u_d = -p->kd * dmeas_dt;
 
     // control signal
     float u = u_p + u_i + u_d; 
