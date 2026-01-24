@@ -27,7 +27,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tests.h"
 #include "app_main.h"
 /* USER CODE END Includes */
 
@@ -100,7 +99,6 @@ int main(void)
   MX_FDCAN2_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  run_tests();
   app_init();
   app_main();
   /* USER CODE END 2 */
