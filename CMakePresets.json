@@ -2,59 +2,61 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "default",
+            "name": "embedded-default",
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
-		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
             "cacheVariables": {
-            }
+                "EMBEDDED_BUILD": "ON",
+                "BUILD_TESTS": "OFF"
+        }
         },
         {
-            "name": "Debug",
-            "inherits": "default",
+            "name": "Embedded-Debug",
+            "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
-            }
+        }
         },
         {
-            "name": "RelWithDebInfo",
-            "inherits": "default",
+            "name": "Embedded-RelWithDebInfo",
+            "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-            }
+        }
         },
         {
-            "name": "Release",
-            "inherits": "default",
+            "name": "Embedded-Release",
+            "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
-            }
+        }
         },
         {
-            "name": "MinSizeRel",
-            "inherits": "default",
+            "name": "Embedded-MinSizeRel",
+            "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
-            }
+        }
+        },
+
+        {
+            "name": "Host-Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Host-Debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "EMBEDDED_BUILD": "OFF",
+                "BUILD_TESTS": "ON"
+        }
         }
     ],
     "buildPresets": [
-        {
-            "name": "Debug",
-            "configurePreset": "Debug"
-        },
-        {
-            "name": "RelWithDebInfo",
-            "configurePreset": "RelWithDebInfo"
-        },
-        {
-            "name": "Release",
-            "configurePreset": "Release"
-        },
-        {
-            "name": "MinSizeRel",
-            "configurePreset": "MinSizeRel"
-        }
+        { "name": "Embedded-Debug", "configurePreset": "Embedded-Debug" },
+        { "name": "Embedded-RelWithDebInfo", "configurePreset": "Embedded-RelWithDebInfo" },
+        { "name": "Embedded-Release", "configurePreset": "Embedded-Release" },
+        { "name": "Embedded-MinSizeRel", "configurePreset": "Embedded-MinSizeRel" },
+        { "name": "Host-Debug", "configurePreset": "Host-Debug" }
     ]
 }
