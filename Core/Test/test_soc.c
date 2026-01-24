@@ -26,9 +26,9 @@ void test_integrator_constant_input(void)
 
     for (uint32_t now_ms = 0; now_ms <= 1000; now_ms+= 100) {
         integrator_step_ms(&i, 2.0f, now_ms); // 2A for 1s total
-        DEBUG_PRINTF("q: %f\n", i.x);
+        // DEBUG_PRINTF("q: %f\n", i.x);
     }
-    DEBUG_PRINTF("q: %f\n", i.x);
+    // DEBUG_PRINTF("q: %f\n", i.x);
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 2.0f, i.x);
 }
 
@@ -66,13 +66,15 @@ void test_mock_ts_test_differentiator(void) {
         float dvdt = differentiator_step_ms(&d, v_now, t_ms);
         float dvdt_expected = (v_in - v_prev    ) / (R * C);
 
+        /*
         DEBUG_PRINTF("%lu,%.6f,%.6f,%.6f,%.6f\n",
                     (unsigned long)t_ms,
                     v_now,
                     dvdt,
                     dvdt_expected,
                     dvdt - dvdt_expected);
-        
+        */
+
         if (dvdt < -1e-3f) {
             // DEBUG_PRINTF("FAIL: negative slope\n");
             errors += 1;
@@ -94,6 +96,43 @@ void test_mock_ts_test_differentiator(void) {
     TEST_ASSERT_EQUAL(0, errors);
 }
 
+void test_pid_step_response_simple(void) {
+    const uint32_t dt_ms = 10;
+    const float dt_s = 0.01f;
+
+    const float setpoint = 1.0f;
+
+    PID pid = {
+        .kp = 2.0f,
+        .ki = 1.0f,
+        .kd = 0.0f,
+
+        .out_min = -10.0f,
+        .out_max =  10.0f,
+        .i_min   = -5.0f,
+        .i_max   =  5.0f
+    };
+
+    float y = 0.0f;     // plant output
+    uint32_t t_ms = 0;  // start time
+
+    DEBUG_PRINTF("t_ms,y,u\n");
+    for (; t_ms <= 5000; t_ms += dt_ms) {
+
+        float u = pid_step_ms(&pid, setpoint, y, t_ms);
+        y += u * dt_s;  // plant
+
+        if (t_ms % 100 == 0) {
+            DEBUG_PRINTF("%lu,%.6f,%.6f\n",
+                 (unsigned long)t_ms,
+                 y,
+                 u);
+        }
+    }
+    TEST_ASSERT_EQUAL(0, 1); // to see output
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, setpoint, y);
+}
+
 void run_tests_soc(void) {
     printf("STARTING TESTS");
     RUN_TEST(test_create_object);
@@ -101,4 +140,5 @@ void run_tests_soc(void) {
     RUN_TEST(test_create_soc);
     RUN_TEST(test_differentiator);
     RUN_TEST(test_mock_ts_test_differentiator);
+    RUN_TEST(test_pid_step_response_simple);
 }

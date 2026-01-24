@@ -63,3 +63,69 @@ static inline float differentiator_step_ms(Differentiator *d, float x, uint32_t 
 
     return dx / dt_s;
 }
+
+// Used to clamp bound ouput of blocks
+static inline float clampf(float x, float lo, float hi)
+{
+    if (x < lo) return lo;
+    if (x > hi) return hi;
+    return x;
+}
+
+// PID Object
+typedef struct  {
+    float kp, ki, kd;               // gain terms
+    float out_min, out_max;         // output clamp
+    float i_min, i_max;             // intergrator clamp
+
+    Integrator i;
+    Differentiator d;
+
+    bool initialized;
+} PID;
+
+static inline void pid_init(PID *p,
+                            float kp, float ki, float kd,
+                            float out_min, float out_max,
+                            float i_min, float i_max,
+                            uint32_t now_ms)
+{
+    p->kp = kp; 
+    p->ki = ki; 
+    p->kd = kd;
+    p->out_min = out_min; 
+    p->out_max = out_max;
+    p->i_min = i_min; 
+    p->i_max = i_max;
+
+    integrator_init(&p->i, 0.0f, now_ms);
+    differentiator_init(&p->d, 0.0f, now_ms);
+    p->initialized = true;
+}
+
+// static inline float differentiator_step_ms(Differentiator *d, float x, uint32_t now_ms) {
+static inline float pid_step_ms(PID *p, float setpoint, float measurement, uint32_t now_ms) {
+    if (!p->initialized) {
+        pid_init(p, p->kp, p->ki, p->kd, p->out_min, p->out_max, p->i_min, p->i_max, now_ms);
+    }
+    
+    float error = setpoint - measurement;
+ 
+    // proportional term
+    float u_p = p->kp * error;
+ 
+    // intergral term: ui(t) = ki * int{e(t)} dt
+    float error_int = integrator_step_ms(&p->i, error, now_ms);
+    error_int = clampf(error_int, p->i_min, p->i_max);
+    p->i.x = error_int; // store for next pass
+    float u_i = p->ki * error_int;
+
+    // derivative term ud(t) = kd * de(t)/dt
+    float error_dt = differentiator_step_ms(&p->d, measurement, now_ms);
+    float u_d = p->kd * error_dt;
+
+    // control signal
+    float u = u_p + u_i + u_d; 
+
+    return clampf(u, p->out_min, p->out_max);
+}
