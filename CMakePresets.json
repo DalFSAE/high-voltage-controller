@@ -10,37 +10,36 @@
             "cacheVariables": {
                 "EMBEDDED_BUILD": "ON",
                 "BUILD_TESTS": "OFF"
-        }
+            }
         },
         {
             "name": "Embedded-Debug",
             "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
-        }
+            }
         },
         {
             "name": "Embedded-RelWithDebInfo",
             "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-        }
+            }
         },
         {
             "name": "Embedded-Release",
             "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
-        }
+            }
         },
         {
             "name": "Embedded-MinSizeRel",
             "inherits": "embedded-default",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel"
-        }
+            }
         },
-
         {
             "name": "Host-Debug",
             "generator": "Ninja",
@@ -49,14 +48,43 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "EMBEDDED_BUILD": "OFF",
                 "BUILD_TESTS": "ON"
-        }
+            }
         }
     ],
     "buildPresets": [
-        { "name": "Embedded-Debug", "configurePreset": "Embedded-Debug" },
-        { "name": "Embedded-RelWithDebInfo", "configurePreset": "Embedded-RelWithDebInfo" },
-        { "name": "Embedded-Release", "configurePreset": "Embedded-Release" },
-        { "name": "Embedded-MinSizeRel", "configurePreset": "Embedded-MinSizeRel" },
-        { "name": "Host-Debug", "configurePreset": "Host-Debug" }
+        {
+            "name": "Embedded-Debug",
+            "configurePreset": "Embedded-Debug"
+        },
+        {
+            "name": "Embedded-RelWithDebInfo",
+            "configurePreset": "Embedded-RelWithDebInfo"
+        },
+        {
+            "name": "Embedded-Release",
+            "configurePreset": "Embedded-Release"
+        },
+        {
+            "name": "Embedded-MinSizeRel",
+            "configurePreset": "Embedded-MinSizeRel"
+        },
+        {
+            "name": "Host-Debug",
+            "configurePreset": "Host-Debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "Host-Test",
+            "displayName": "Run host unit tests",
+            "configurePreset": "Host-Debug",
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error"
+            }
+        }
     ]
 }

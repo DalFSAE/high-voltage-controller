@@ -97,6 +97,13 @@ Make sure the STM32CubeProgrammer CLI is installed and available on your system 
 cmake -DSTM32_PROGRAMMER_CLI="C:/ST/STM32CubeProgrammer/bin/STM32_Programmer_CLI.exe" -B build
 ```
 
+### Running Unit Tests
+
+```bash
+cmake --preset Host-Debug
+cmake --build --preset Host-Debug
+ctest --preset Host-Test
+```
 
 <!-- CONTRIBUTING -->
 ## Contributing
