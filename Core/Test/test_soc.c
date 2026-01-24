@@ -1,8 +1,13 @@
 #include "unity.h"
+#include "soc"
 
-// void setUp(void) {}
-// void tearDown(void) {}
-void test_soc_init(void) {
+void create_object(void) {
+
+
+    TEST_ASSERT_EQUAL(0, 0);
+}
+
+void run_tests_soc(void) {
     printf("STARTING TESTS");
-    TEST_ASSERT_EQUAL(1, 1);
+    RUN_TEST(create_object)
 }
