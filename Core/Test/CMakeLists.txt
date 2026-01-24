@@ -11,6 +11,7 @@ add_executable(hvc_tests
   test_soc.c
   ../User/hv_control_logic.c
   ../User/integrator.c
+  ../User/soc.c
 )
 
 target_include_directories(hvc_tests PRIVATE
