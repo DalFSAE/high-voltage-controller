@@ -17,9 +17,9 @@ void test_integrator_constant_input(void)
 
     for (uint32_t now_ms = 0; now_ms <= 1000; now_ms+= 100) {
         integrator_step_ms(&i, 2.0f, now_ms); // 2A for 1s total
-        DBG_PRINTF("q: %f\n", i.x);
+        DEBUG_PRINTF("q: %f\n", i.x);
     }
-    DBG_PRINTF("q: %f\n", i.x);
+    DEBUG_PRINTF("q: %f\n", i.x);
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 2.0f, i.x);
 }
 

@@ -39,7 +39,7 @@ void test_mock_ts(void) {
 
     for (uint32_t t_ms = 0; t_ms <= 4000; t_ms += t_delta_ms) {
         v_prev = rc_step_vc(v_prev, v_in, 2000.0f, 0.000440f, t_delta_ms);
-        DBG_PRINTF("Time: %4d ms, Vc: %.2f V\n", t_ms, v_prev);
+        DEBUG_PRINTF("Time: %4d ms, Vc: %.2f V\n", t_ms, v_prev);
     }
     TEST_ASSERT_EQUAL(1, 1);
 }
