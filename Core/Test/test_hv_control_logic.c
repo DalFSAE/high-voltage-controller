@@ -2,16 +2,11 @@
 #include "hv_control_logic.h"
 #include "mock_ts.h"
 #include "stdio.h"
-#include "unity_internals.h"
 
-void setUp(void) {}
-void tearDown(void) {}
+#include "debug_print.h"    
 
-/*
- * Sanity test:
- *  - can call hvc_init
- *  - context fields are set
- */
+
+
 void test_hvc_init_sets_defaults(void)
 {
     HvcContext ctx;
@@ -27,7 +22,7 @@ void test_init_state_outputs_are_safe_off(void)
 {
     HvcContext ctx;
     HvcOutputs out;
-    HvcInputs in = {0};
+    HvcInputs in = _hvc_inputs_default();
 
     hvc_init(&ctx, 0);
     hvc_update(&ctx, &in, &out);
@@ -39,12 +34,12 @@ void test_init_state_outputs_are_safe_off(void)
 
 void test_mock_ts(void) {
     float v_in = 400.0f;
-    float t_delta_ms = 10;
+    float t_delta_ms = 100;
     float v_prev = 0.0f;
 
     for (uint32_t t_ms = 0; t_ms <= 4000; t_ms += t_delta_ms) {
         v_prev = rc_step_vc(v_prev, v_in, 2000.0f, 0.000440f, t_delta_ms);
-        printf("Time: %4d ms, Vc: %.2f V\n", t_ms, v_prev);
+        DBG_PRINTF("Time: %4d ms, Vc: %.2f V\n", t_ms, v_prev);
     }
     TEST_ASSERT_EQUAL(1, 1);
 }
@@ -68,7 +63,7 @@ void test_mock_precharge_sequence(void) {
 
 
 
-int main(void)
+void run_test_hv_control_logic(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_hvc_init_sets_defaults);

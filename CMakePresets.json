@@ -10,7 +10,7 @@
             "cacheVariables": {
                 "EMBEDDED_BUILD": "ON",
                 "BUILD_TESTS": "OFF"
-        }
+            }
         },
         {
             "name": "Embedded-Debug",
