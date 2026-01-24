@@ -54,3 +54,20 @@ typedef struct {
 
 void hvc_init(HvcContext *context, uint32_t now_ms);
 void hvc_update(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+
+
+// Setter
+static inline HvcInputs _hvc_inputs_default(void)
+{
+    HvcInputs in = {0};
+
+    in.command = DISABLE_TS;
+    in.imd_ok = false;
+    in.bms_ok = false;
+    in.sdc_ok = false;
+    in.pack_v = 0.0f;
+    in.battery_v = 0.0f;
+    in.now_ms = 0;
+
+    return in;
+}

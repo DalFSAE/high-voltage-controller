@@ -6,7 +6,9 @@ enable_testing()
 add_executable(hvc_tests
   unity/unity.c
   mock_ts.h
+  test_runner.c
   test_hv_control_logic.c
+  test_soc.c
   ../User/hv_control_logic.c
 )
 

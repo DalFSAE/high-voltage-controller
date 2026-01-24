@@ -1,6 +1,5 @@
 {
-    "files.associations": {
-        "hvc_config.h": "c",
-        "hv_control.h": "c"
-    }
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "C_Cpp.errorSquiggles": "enabled"
 }
