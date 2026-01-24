@@ -79,15 +79,6 @@ void pid_init(PID *p,
 
 float pid_step_ms(PID *p, float setpoint, float measurement, uint32_t now_ms)
 {
-    if (!p->initialized) {
-        // NOTE: relies on p->kp/ki/kd/out_min/out_max/i_min/i_max being valid already
-        // (e.g., PID p = {0}; then set fields, or call pid_init() explicitly).
-        pid_init(p, p->kp, p->ki, p->kd,
-                 p->out_min, p->out_max,
-                 p->i_min, p->i_max,
-                 now_ms);
-    }
-
     float error = setpoint - measurement;
 
     // proportional term
