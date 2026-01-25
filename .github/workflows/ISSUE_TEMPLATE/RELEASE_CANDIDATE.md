@@ -1,8 +1,4 @@
-# Release Candidate
-
-<!--`vX.Y.Z-release-candidate` -->
-
-## Summary
+# Release `vX.Y.Z-release-candidate`
 
 ## Scope
 
