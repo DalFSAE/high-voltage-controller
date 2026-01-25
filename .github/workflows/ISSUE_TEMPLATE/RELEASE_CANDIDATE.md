@@ -1,3 +1,10 @@
+---
+name: Release Candidate
+about: Track a release candidate and its validation status
+title: "Release vX.Y.Z-release-candidate"
+labels: []
+assignees: []
+---
 # Release `vX.Y.Z-release-candidate`
 <!-- Short description of this release candidate. -->
 
