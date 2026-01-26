@@ -28,7 +28,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "tests.h"
 #include "app_main.h"
 /* USER CODE END Includes */
 
@@ -104,7 +103,6 @@ int main(void)
   MX_SPI3_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  run_tests();
   app_init();
   app_main();
   /* USER CODE END 2 */

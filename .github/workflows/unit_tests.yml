@@ -1,0 +1,21 @@
+name: Unit Tests (Host)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  host-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S Core/Test -B build-tests
+
+      - name: Build
+        run: cmake --build build-tests
+
+      - name: Run tests
+        run: ctest --test-dir build-tests --output-on-failure

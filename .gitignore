@@ -47,3 +47,5 @@ STM32CubeMX.log
 # Logs and Temporary Files
 # ---------------------------
 *.log
+/.vscode
+/build-tests

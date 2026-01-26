@@ -54,8 +54,18 @@
             "serverArgs": [
                 "-m","0",
             ],
-            /* If you use external loader, add additional arguments */
-            //"serverArgs": ["--extload", "path/to/ext/loader.stldr"],
+        },
+        {
+            "name": "Run & Debug Host Tests (Unity)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Host-Debug/Core/Test/hvc_tests.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "MIMode": "gdb",
+            "externalConsole": false,
+            "preLaunchTask": "CMake: test"
         }
     ]
 }
