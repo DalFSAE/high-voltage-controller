@@ -1,8 +1,10 @@
 #include "hv_control_logic.h"
+#include "hv_control.h"
 #include "hvc_config.h"
 
 #include <stdbool.h>
 
+static bool check_sdc(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_measure(HvcContext *context, HvcInputs  *in, HvcOutputs *out);
@@ -19,14 +21,18 @@ void hvc_init(HvcContext *context, uint32_t now_ms) {
 
 // Main HVC state machine update function
 void hvc_update(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
-
     // state functions will enable required outputs each tick
     out->air_n_on = false;
     out->air_p_on = false;
     out->pc_on    = false;
 
-    //todo: for all states, check BMS, IMD, SDC, etc.
+    // SDC may open at any time, for many reasons
+    // we can recover if the SDC signal returns
+    if (!check_sdc(context, in, out)) {
+        return;
+    }
 
+    // HVC State Machine
     switch (context->state) {
         case HVC_S_INIT:
             hvc_s_init(context, in, out);
@@ -49,7 +55,6 @@ void hvc_update(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
         default:
             context->state = HVC_S_FAULT;
     }
-    return;
 }
 
 static inline void hvc_bail_out(HvcContext *context, HvcOutputs *out, HvcState_t next_state) {
@@ -60,6 +65,8 @@ static inline void hvc_bail_out(HvcContext *context, HvcOutputs *out, HvcState_t
 
     context->state = next_state;
 }
+
+// Entry state
 static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->pc_on = false;
@@ -67,8 +74,9 @@ static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
 
     // Transition to STANDBY after initialization
     context->state = HVC_S_STANDBY;
-}       
+}
 
+// SDC is present, but we are waiting for the PC command.
 static void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->air_p_on = false;
@@ -187,3 +195,20 @@ static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     }
 
 }
+
+static bool check_sdc(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+    if (in->sdc_ok) {
+        return true;
+    }
+
+    // SDC is open, force safe outputs
+    out->air_n_on = false;
+    out->air_p_on = false;
+    out->pc_on    = false;
+
+    // we can recover from a SDC fault, so return to standby
+    context->fault = HVC_FAULT_SDC_LOST;
+    context->state = HVC_S_STANDBY;
+    return false;
+}
+

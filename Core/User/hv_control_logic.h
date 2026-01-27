@@ -19,6 +19,7 @@ typedef enum {
     HVC_FAULT_OVER_VOLT,
     HVC_FAULT_UNDER_VOLT,
     HVC_FAULT_MEASURE_TIMEOUT,
+    HVC_FAULT_SDC_LOST,
 } HvcFaultCode_t;
 
 typedef enum {
