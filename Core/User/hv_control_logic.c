@@ -3,18 +3,12 @@
 
 #include <stdbool.h>
 
-#define V_BAT_MIN 268.8
-#define V_BAT_MAX 400.0
-
-
 static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_measure(HvcContext *context, HvcInputs  *in, HvcOutputs *out);
 static void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out);
-
-
 
 void hvc_init(HvcContext *context, uint32_t now_ms) {
     context->state = HVC_S_INIT;

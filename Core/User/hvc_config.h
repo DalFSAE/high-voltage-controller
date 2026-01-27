@@ -28,5 +28,10 @@
 #define PC_SETTLE_MS            50
 #define PC_MEASURE_TIMEOUT_MS   500
 
+// BATTERY SEETINGS
+
+#define V_BAT_MIN 268.8
+#define V_BAT_MAX 400.0
+
 #endif
 
