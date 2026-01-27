@@ -58,7 +58,15 @@ void hvc_update(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     return;
 }
 
-void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static inline void hvc_bail_out(HvcContext *context, HvcOutputs *out, HvcState_t next_state) {
+    // Immediately force safe outputs
+    out->air_n_on = false;
+    out->air_p_on = false;
+    out->pc_on    = false;
+
+    context->state = next_state;
+}
+static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->pc_on = false;
     out->air_p_on = false;
@@ -67,7 +75,7 @@ void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     context->state = HVC_S_STANDBY;
 }       
 
-void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->air_p_on = false;
     out->pc_on    = false;
@@ -80,13 +88,13 @@ void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
 }
 
 // We must close AIR_N, in order to measure the battery voltage
-void hvc_s_measure(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static void hvc_s_measure(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = true;
     out->air_p_on = false;
     out->pc_on    = false;
 
     if (in->command != HVC_CMD_ENABLE_TS) {
-        context->state = HVC_S_STANDBY; // bail out safely
+        hvc_bail_out(context, out, HVC_S_STANDBY);
         return;
     }
  
@@ -99,36 +107,35 @@ void hvc_s_measure(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
 
     if (dt >= PC_MEASURE_TIMEOUT_MS) {
         context->fault = HVC_FAULT_MEASURE_TIMEOUT;
-        context->state = HVC_S_FAULT;
+        hvc_bail_out(context, out, HVC_S_FAULT);
         return;
     }
 
     if (in->battery_v < V_BAT_MIN) {
         context->fault = HVC_FAULT_UNDER_VOLT;
-        context->state = HVC_S_FAULT;
+        hvc_bail_out(context, out, HVC_S_FAULT);
         return;
     }
 
     if (in->battery_v > V_BAT_MAX) {
         context->fault = HVC_FAULT_OVER_VOLT;
-        context->state = HVC_S_FAULT;
+        hvc_bail_out(context, out, HVC_S_FAULT);
         return;
     }
 
     // we should now have a stable voltage reading
-
     context->start_tick_ms = in->now_ms;    // store time for timeout checks
     context->state = HVC_S_PC_ACTIVE;
 }
 
 // Now we are precharging!
-void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = true;
     out->air_p_on = false;
     out->pc_on    = true;
 
     if (in->command != HVC_CMD_ENABLE_TS) {
-        context->state = HVC_S_STANDBY; // bail out safely
+        hvc_bail_out(context, out, HVC_S_STANDBY);
         return;
     }
 
@@ -137,16 +144,15 @@ void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     // often caused by a missing precharge resistor
     if (dt >= PRECHARGE_MAX_TIME) {
         context->fault = HVC_FAULT_PC_TIMEOUT;
-        context->state = HVC_S_FAULT;
+        hvc_bail_out(context, out, HVC_S_FAULT);
         return;
     }
 
-    // todo: add hysteresis checks
     if (in->tractive_v >= PC_THRESH * in->battery_v) {
         // something is wrong if we precharge *too* fast.
         if(dt <= PC_MINTIME_MS) {
             context->fault = HVC_FAULT_PC_TO_FAST;
-            context->state = HVC_S_FAULT;
+            hvc_bail_out(context, out, HVC_S_FAULT);
             return;
         }
         // its alive!
@@ -157,13 +163,13 @@ void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     }
 }
 
-void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = true;
     out->air_p_on = true;
     out->pc_on    = false;
 
     if (in->command != HVC_CMD_ENABLE_TS) {
-        context->state = HVC_S_STANDBY; // bail out safely
+        hvc_bail_out(context, out, HVC_S_STANDBY);
         return;
     }
 
@@ -176,7 +182,7 @@ void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     }
 }
 
-void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
+static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->air_p_on = false;
     out->pc_on    = false;
