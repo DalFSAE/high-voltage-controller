@@ -6,9 +6,10 @@
 typedef enum {
     HVC_S_INIT                = 0x00U,
     HVC_S_STANDBY             = 0x01U,
-    HVC_S_PC_ACTIVE           = 0x02U,
-    HVC_S_TS_ENERGIZED        = 0x03U,
-    HVC_S_FAULT           = 0x04U,
+    HVC_S_TS_MEASURE          = 0x02U,
+    HVC_S_PC_ACTIVE           = 0x03U,
+    HVC_S_TS_ENERGIZED        = 0x04U,
+    HVC_S_FAULT               = 0x05U,
 } HvcState_t;
 
 typedef enum {
@@ -20,16 +21,16 @@ typedef enum {
 } HvcFaultCode_t;
 
 typedef enum {
-    ENABLE_TS = 0,
-    DISABLE_TS,
-    CLEAR_FAULT,
+    HVC_CMD_ENABLE_TS = 0,
+    HVC_CMD_DISABLE_TS,
+    HVC_CMD_CLEAR_FAULT,
 } HvcCmd_t;
 
 // Used to control PC state machine
 typedef struct {
     HvcCmd_t command; 
 
-    float pack_v;
+    float tractive_v;
     float battery_v;
 
     bool imd_ok;
@@ -61,11 +62,11 @@ static inline HvcInputs _hvc_inputs_default(void)
 {
     HvcInputs in = {0};
 
-    in.command = DISABLE_TS;
+    in.command = HVC_CMD_DISABLE_TS;
     in.imd_ok = false;
     in.bms_ok = false;
     in.sdc_ok = false;
-    in.pack_v = 0.0f;
+    in.tractive_v = 0.0f;
     in.battery_v = 0.0f;
     in.now_ms = 0;
 
