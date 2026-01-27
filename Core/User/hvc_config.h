@@ -19,12 +19,14 @@
 
 // PRECHARGE SETTINGS
 
-#define SDC_ADC_MIN_VOLTAGE 128
-#define SIMPLE_PC_LENGTH_MS 5000
-#define PC_TIMEOUT_MS       10000       // Throw a fault if PC is longer than value (ms)
-#define PC_MINTIME_MS       100         // Throw a fault if PC is shorter than value (ms)    
-#define PC_OVERLAP_MS       10          // Allow AIR_N and the PC relay to both be on for (ms)
-#define PC_THRESH           0.90f       // Bring TS to % of the pack voltage
+#define SDC_ADC_MIN_VOLTAGE     128
+#define SIMPLE_PC_LENGTH_MS     5000
+#define PC_TIMEOUT_MS           10000       // Throw a fault if PC is longer than value (ms)
+#define PC_MINTIME_MS           100         // Throw a fault if PC is shorter than value (ms)    
+#define PC_OVERLAP_MS           10          // Allow AIR_N and the PC relay to both be on for (ms)
+#define PC_THRESH               0.90f       // Bring TS to % of the pack voltage
+#define PC_SETTLE_MS            50
+#define PC_MEASURE_TIMEOUT_MS   500
 
 #endif
 

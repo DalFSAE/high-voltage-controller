@@ -6,16 +6,13 @@
 #define V_BAT_MIN 268.8
 #define V_BAT_MAX 400.0
 
-#define TS_PC_TIMEOUT_MS 10000
-#define TS_SETTLE_MS 50
-#define TS_MEASURE_TIMEOUT_MS 500
 
-void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out);
-void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out);
-void hvc_s_measure(HvcContext *context, HvcInputs  *in, HvcOutputs *out);
-void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out);
-void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out);
-void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+static void hvc_s_init(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+static void hvc_s_standby(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+static void hvc_s_measure(HvcContext *context, HvcInputs  *in, HvcOutputs *out);
+static void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+static void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out);
+static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out);
 
 
 
@@ -96,7 +93,13 @@ void hvc_s_measure(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     uint32_t dt = in->now_ms - context->start_tick_ms;
  
     // wait of TS voltage to settle
-    if (dt > TS_SETTLE_MS) {
+    if (dt < PC_SETTLE_MS) {
+        return;
+    }
+
+    if (dt >= PC_MEASURE_TIMEOUT_MS) {
+        context->fault = HVC_FAULT_MEASURE_TIMEOUT;
+        context->state = HVC_S_FAULT;
         return;
     }
 
@@ -132,15 +135,16 @@ void hvc_s_pc_active(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     uint32_t dt = in->now_ms - context->start_tick_ms;
 
     // often caused by a missing precharge resistor
-    if (dt > PRECHARGE_MAX_TIME) {
+    if (dt >= PRECHARGE_MAX_TIME) {
         context->fault = HVC_FAULT_PC_TIMEOUT;
         context->state = HVC_S_FAULT;
         return;
     }
 
+    // todo: add hysteresis checks
     if (in->tractive_v >= PC_THRESH * in->battery_v) {
         // something is wrong if we precharge *too* fast.
-        if(dt < PC_MINTIME_MS) {
+        if(dt <= PC_MINTIME_MS) {
             context->fault = HVC_FAULT_PC_TO_FAST;
             context->state = HVC_S_FAULT;
             return;
@@ -166,7 +170,7 @@ void hvc_s_ts_energized(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     uint32_t dt = in->now_ms - context->start_tick_ms;
  
     // max 100ms of overlap allowed
-    // this helps settle the voltage
+    // this helps avoid any gap
     if (dt < PC_OVERLAP_MS) {
         out->pc_on = true;
     }
