@@ -186,4 +186,10 @@ static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->air_n_on = false;
     out->air_p_on = false;
     out->pc_on    = false;
+
+    if (in->command == HVC_CMD_CLEAR_FAULT) {
+        context->state = HVC_S_STANDBY;
+        return;
+    }
+
 }
