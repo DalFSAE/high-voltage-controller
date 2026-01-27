@@ -190,6 +190,7 @@ static void hvc_s_fault(HvcContext *context, HvcInputs *in, HvcOutputs *out) {
     out->pc_on    = false;
 
     if (in->command == HVC_CMD_CLEAR_FAULT) {
+        context->fault = HVC_FAULT_CLEAR;
         context->state = HVC_S_STANDBY;
         return;
     }
