@@ -1,0 +1,53 @@
+High Voltage – Anything more than 60V DC or 25V AC RMS
+
+Voltage Limit - voltage between any two electrical connections must be low voltage
+Does not apply to:
+-	High Voltage Systems for injectors
+-	High Voltage Systems for ignition
+-	Voltages internal to OEM charging systems designed for<60V DC output
+
+The Tractive System is always High Voltage.
+
+Voltage limits will be checked by the Energy Meter Data.
+
+Maximum permitted voltage that may occur between any two points must not exceed 600V DC.
+
+When the Isolation Relays are open, High Voltage must not be external of the Tractive Battery Container.
+
+Voltage Indicator: 
+-	Each Tractive Battery Pack must have a prominent indicator when High Voltage is present at the vehicle side of the IRs
+-	Must be located where it is clearly visible when connecting/disconnecting the Tractive Battery Pack connections and be labeled “High Voltage Present”
+
+High Voltage charging leads must be orange
+
+All systems with high voltage must have appropriate overcurrent protection/fusing
+Overcurrent protection devices must be rated for highest voltage in the systems.
+
+Tractive System is active when High Voltage is present outside of the Tractive Battery Container.
+
+Precharge and Discharge Circuits:
+-	Tractive Battery Pack must have a precharge circuit that can charge intermediate circuit to minimum 90% and be supplied from the shutdown circuit
+-	Intermediate Circuit must precharge before closing the second IR (precharge must be controlled by feedback by monitoring the voltage in intermediate circuit)
+-	Tractive system must contain a discharge circuit which is wired in a way that is always active when the shutdown circuit is open, is able to discharge the intermediate circuit capacitors if the MSD has been opened, is not fused, and is designed to handle max Tractive System voltage for at least 15 seconds.
+-	Positive Temperature Coefficient devices must not be used to limit current for the Precharge Circuit or Discharge Circuit
+-	Precharge relay must be a mechanical type relay
+
+Two TMSPs must be installed in the charger, they must be:
+-	Connected to the positive and negative charger output lines
+-	Available during charging of any tractive battery packs
+TMSPs must be:
+-	 4 mm shrouded banana jacks rated to an appropriate voltage level 
+-	Color: Red 
+-	Marked “HV+” and “HV-“
+Each TSMP must be secured with a current limiting resistor: 
+-	The resistor must be sized for the voltage: 
+Maximum TS Voltage	                  Resistor Value
+Vmax <= 200V DC               	      5 kOhm
+200V DC < Vmax <= 600V DC     	      10 kOhm
+400 V DC < Vmax <= 600 V DC         	15 kOhm
+
+-	Resistor continuous power rating must be more than the power dissipated across the TSMPs if they are shorted together 
+-	Direct measurement of the value of the resistor must be possible during Electrical Technical Inspection 
+
+
+
