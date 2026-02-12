@@ -1,22 +1,8 @@
 <a name="readme-top"></a>
 
+# DMS-25 High Voltage Controller
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/DalFSAE/high-voltage-controller">
-    <img src="images/dms_logo.jpg" alt="Logo" width="500" height="200">
-  </a>
-
-<h3 align="center">DalFSAE High Voltage Controller</h3>
-  <p align="center">
-    STM32-based firmware for the Driver Monitoring System's High Voltage Controller.
-    Developed by the Dalhousie Formula SAE EV Team.
-    <br />
-    <a href="https://github.com/DalFSAE/high-voltage-controller/"><strong>Explore the project »</strong></a>
-    <br />
-  </p>
-</div>
+<img width="1192" height="942" alt="426823413-27009c97-8427-46e8-815d-2bc3d1812435" src="https://github.com/user-attachments/assets/4ed84b49-b549-4d41-bdcf-7be4ba5de709" />
 
 <img width="1192" height="942" alt="image" src="https://github.com/user-attachments/assets/cebbdf0b-a263-4e47-b0e6-571a7b03fa8e" />
 
